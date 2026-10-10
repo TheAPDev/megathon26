@@ -1,40 +1,42 @@
 /* Green Ghar design tokens, taken from the approved screen designs: deep forest sidebar, warm paper canvas,
    a bookish serif for page titles and big numbers, Inter for everything you read or tap. */
+/* Green Ghar theme: dark teal glass. Deep navy rail, teal-lit canvas, frosted cards, cyan accent, olive/amber/orange for status. */
 :root {
-  --forest: #123526;
-  --forest-2: #1b4634;
-  --forest-ink: #e9efe8;
-  --green: #1f5c3f;
-  --leaf: #2f7a4f;
-  --leaf-2: #5aa673;
-  --mint: #e7f1e9;
-  --mint-2: #f1f7f2;
-  --paper: #f6f5f0;
-  --card: #ffffff;
-  --line: #e6e3da;
-  --line-2: #efede6;
-  --ink: #1b2a22;
-  --ink-2: #4a5a51;
-  --ink-3: #7b877f;
-  --sand: #d6bf98;
-  --sand-2: #f3ead9;
-  --amber: #c9862b;
-  --amber-bg: #fbeedb;
-  --red: #b9472f;
-  --red-bg: #fbe6e0;
+  --forest: #08171d;
+  --forest-2: #0d2630;
+  --forest-ink: #d9ecee;
+  --green: #3fd0dc;
+  --leaf: #56d9e3;
+  --leaf-2: #7ee3ea;
+  --mint: rgba(63, 208, 220, 0.14);
+  --mint-2: rgba(63, 208, 220, 0.08);
+  --paper: #0b2229;
+  --card: rgba(255, 255, 255, 0.07);
+  --line: rgba(255, 255, 255, 0.12);
+  --line-2: rgba(255, 255, 255, 0.07);
+  --ink: #eaf4f4;
+  --ink-2: #b6cacc;
+  --ink-3: #88a2a6;
+  --sand: #c8b988;
+  --sand-2: rgba(200, 185, 136, 0.16);
+  --amber: #e9a64a;
+  --amber-bg: rgba(233, 166, 74, 0.16);
+  --red: #f0805c;
+  --red-bg: rgba(240, 128, 92, 0.16);
   --blue: #8db6e6;
-  --band-1: #1f5c3f;
-  --band-2: #4f9a62;
-  --band-3: #d9a441;
-  --band-4: #df7c46;
-  --band-5: #c4473a;
-  --radius: 14px;
-  --radius-s: 10px;
-  --shadow: 0 1px 2px rgba(27, 42, 34, 0.04), 0 6px 24px -12px rgba(27, 42, 34, 0.12);
+  --olive: rgba(116, 134, 74, 0.46);
+  --band-1: #38d6a8;
+  --band-2: #86d86b;
+  --band-3: #e6c14b;
+  --band-4: #ef8c4b;
+  --band-5: #e5553f;
+  --radius: 18px;
+  --radius-s: 12px;
+  --shadow: none;
   --serif: 'Fraunces Variable', 'Fraunces', Georgia, serif;
   --sans: 'Inter Variable', 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --sidebar: 236px;
-  color-scheme: light;
+  --rail: 68px;
+  color-scheme: dark;
 }
 
 * { box-sizing: border-box; }

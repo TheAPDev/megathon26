@@ -96,7 +96,7 @@ export default function Paisa() {
               <span className="row muted">−</span>
               <CostBox label="Subsidy" value={inrShort(fin.data.subsidy_inr)} bg="var(--mint)" />
               <span className="row muted">=</span>
-              <CostBox label="Net cost" value={inrShort(fin.data.net_cost_inr)} bg="#f2f1ec" />
+              <CostBox label="Net cost" value={inrShort(fin.data.net_cost_inr)} bg="rgba(255,255,255,0.08)" />
             </div>
           ) : <p className="small muted">Shown once you pick upgrades.</p>}
         </Card>

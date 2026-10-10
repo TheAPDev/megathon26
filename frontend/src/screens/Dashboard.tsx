@@ -1,14 +1,15 @@
 // Screen 1: My Ghar Score. Score, why (7 weighted components), confidence, usage, next action, package potential.
-import { AlertTriangle, ArrowRight, CheckCircle2, ChevronRight, CloudSun, Info, Leaf, Lightbulb, ShieldCheck, Zap } from 'lucide-react'
-import { useMemo, useState } from 'react'
+import { AlertTriangle, ArrowRight, BadgeIndianRupee, CheckCircle2, ChevronRight, CloudSun, Gauge, Info, Leaf, Lightbulb, Maximize2, ShieldCheck, Timer, TrendingUp, Zap } from 'lucide-react'
+import { useMemo, useState, type ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 import { ApiError } from '../api/client'
 import { useHome, usePlan, useScenario, useScore, useWeatherSignature } from '../api/hooks'
 import type { ScoreResult, SubScore } from '../api/types'
-import { HBar, MonthlyBars } from '../components/charts'
+import { MonthlyBars } from '../components/charts'
+import { HouseHero } from '../components/HouseHero'
 import { BandChip, Card, Drawer, Empty, Estimated, ErrorState, Loading, Q } from '../components/ui'
-import { BAND_COLOR, COMPONENT_LABEL, inr, inrShort, kg, kwh, num, pct, years } from '../lib/format'
-import { COMPONENT_ICON, retrofitIcon } from '../lib/icons'
+import { BAND_COLOR, bandOf, COMPONENT_LABEL, inr, inrShort, kg, kwh, num, pct, years } from '../lib/format'
+import { retrofitIcon } from '../lib/icons'
 import { useT } from '../lib/i18n'
 import { useSession } from '../state/session'
 
@@ -32,49 +33,108 @@ export function Dashboard() {
       </Empty>
     )
   const name = user?.email?.split('@')[0]
-  const today = new Date().toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' })
+  const sc = score.data
+  const top = plan.data?.recommendations[0]
+  const lowParts = sc ? [...sc.components].sort((x, y) => x.score - y.score) : []
 
   return (
     <>
-      <div className="page-head">
-        <div>
-          <h1 className="page-title">{name ? `Welcome back, ${name}` : 'Welcome to your Green Ghar'}</h1>
-          <p className="page-sub">Here's how your home is performing and what you can do next.</p>
-        </div>
-        <div className="meta-card">
-          <div><div>{today}</div><div className="tiny">{home.data ? `${home.data.city}` : '…'}</div></div>
-          <CloudSun size={26} color="var(--amber)" aria-hidden />
-          <Link to="/garmi" className="small">Heat & your bill</Link>
+      <div className="stage">
+        <section className="card cond" aria-label="Your home today">
+          <div className="cond-h">
+            <div><h2>{name ? `Hello, ${name}` : 'Your home today'}</h2><small>{home.data ? `${home.data.city} · ${home.dataUpdatedAt ? 'updated just now' : ''}` : 'Loading…'}</small></div>
+            <Link to="/bill" className="icon-btn" aria-label="Add a bill"><Maximize2 size={15} /></Link>
+          </div>
+          <div className="tiles">
+            <div className="tile"><span>Ghar score</span><b>{sc ? Math.round(sc.score) : '–'}<small>/100</small></b></div>
+            {sc?.peer_percentile != null
+              ? <div className="tile"><span>Beats similar homes</span><b>{Math.round(sc.peer_percentile)}<small>%</small></b></div>
+              : <div className="tile"><span>Rating</span><b style={{ fontSize: 20, lineHeight: 1.15 }}>{sc?.band ?? '–'}</b></div>}
+            <div className="tile"><span>Energy intensity</span><b>{sc ? num(sc.intensity_kwh_m2) : '–'}<small>kWh/m²</small></b></div>
+            <div className="tile"><span>Confidence</span><b style={{ fontSize: 24 }}>{sc ? sc.confidence[0].toUpperCase() + sc.confidence.slice(1) : '–'}</b></div>
+          </div>
+          <Metric icon={<Zap />} title="Grid electricity" sub={sc?.annual_grid_kwh_estimated ? 'Estimated per year' : 'Per year'} value={sc ? kwh(sc.annual_grid_kwh) : '–'} />
+          <Metric icon={<BadgeIndianRupee />} title="Savings with full plan" sub="Per year" value={pkg.data ? inrShort(pkg.data.saving_inr_year) : '–'} hl />
+          <Metric icon={<Leaf />} title="Carbon cut with plan" sub="Per year" value={pkg.data ? kg(Math.abs(pkg.data.co2_saving_kg_year)) : '–'} />
+          <Metric icon={<TrendingUp />} title="Score after plan" sub={pkg.data?.band_after ?? 'All measures'} value={pkg.data ? String(Math.round(pkg.data.score_after)) : '–'} />
+          <Metric icon={<Timer />} title="Best first step payback" sub={top?.name ?? 'Next action'} value={top ? years(top.payback_years) : '–'} />
+          <div className="mini-title"><span>Monthly electricity use</span><Link to="/garmi" aria-label="Heat and your bill"><Gauge size={16} /></Link></div>
+          <Q q={home} lines={3}>{(h) => <UseSteps months={h.monthly_kwh ?? []} />}</Q>
+        </section>
+
+        <div className="hero">
+          <div className="hero-art"><HouseHero /></div>
+          {sc && (
+            <div className="hero-badge" aria-hidden>
+              <div className="n">{Math.round(sc.score)}<small> /100</small></div>
+              <div className="small" style={{ marginTop: 4 }}>{sc.band}</div>
+            </div>
+          )}
+          <div className="hero-cards">
+            <section className="olive" aria-labelledby="comp-h">
+              <Link to="/studio" className="corner" aria-label="Open retrofit studio"><ArrowRight size={16} style={{ transform: 'rotate(-45deg)' }} /></Link>
+              <h2 id="comp-h">Score parts</h2>
+              <Q q={score} lines={6}>
+                {(s) => (
+                  <div className="cbars" role="list">
+                    {s.components.map((c) => {
+                      const low = c.score < 40
+                      const col = BAND_COLOR[bandOf(c.score)]
+                      return (
+                        <button key={c.component} role="listitem" className="cbar" onClick={() => setComp(c)} aria-label={`${COMPONENT_LABEL[c.component] ?? c.component}: ${Math.round(c.score)} of 100, weight ${Math.round(c.weight * 100)}%`}>
+                          <span className="v"><Estimated show={c.estimated}>{Math.round(c.score)}</Estimated></span>
+                          <span className="col"><i style={{ height: `${Math.max(6, c.score)}%`, background: `linear-gradient(180deg, ${col}, color-mix(in srgb, ${col} 55%, #0a3a44))` }} />{low && <u><AlertTriangle /></u>}</span>
+                          <span className="l">{SHORT[c.component] ?? (COMPONENT_LABEL[c.component] ?? c.component).split(' ')[0]}</span>
+                        </button>
+                      )
+                    })}
+                  </div>
+                )}
+              </Q>
+            </section>
+
+            <section className="olive" aria-labelledby="sav-h">
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                <div><h2 id="sav-h">Savings</h2><div className="sub">{pkg.data ? `${pkg.data.steps.length} measures, applied in order` : 'Full plan'}</div></div>
+                <Link to="/paisa" className="icon-btn" aria-label="Open finance" style={{ background: 'rgba(255,255,255,.14)' }}><ArrowRight size={16} /></Link>
+              </div>
+              <div className="trio">
+                <div><b>{pkg.data ? inrShort(pkg.data.saving_inr_year) : '–'}</b><span>Per year</span></div>
+                <div><b>{pkg.data ? pct(pkg.data.baseline.co2_kg ? (100 * pkg.data.co2_saving_kg_year) / pkg.data.baseline.co2_kg : null) : '–'}</b><span>Carbon cut</span></div>
+                <div><b>{pkg.data ? Math.round(pkg.data.score_after) : '–'}</b><span>New score</span></div>
+              </div>
+              <div className="scale">
+                <div className="lab"><span>Poor</span><span>Efficient</span></div>
+                <div className="track"><div className="ticks" /><div className="pin" style={{ left: `${sc?.score ?? 0}%` }} /></div>
+              </div>
+              <p className="foot-line">{sc ? `You are at ${Math.round(sc.score)} today${pkg.data ? `; the full plan reaches ${Math.round(pkg.data.score_after)}.` : '.'}` : 'Loading your score…'}</p>
+            </section>
+
+            <section className="olive" aria-labelledby="al-h">
+              <h2 id="al-h" style={{ marginBottom: 6 }}>Needs attention</h2>
+              <div className="alerts">
+                {sc && sc.warnings.slice(0, 1).map((w) => (
+                  <Link key="w" to="/bill" className="alert-row"><span className="ic"><Info /></span><span><b>{w.length > 34 ? `${w.slice(0, 33)}…` : w}</b><small>Warning</small></span></Link>
+                ))}
+                {lowParts.slice(0, 3).map((c) => (
+                  <button key={c.component} className="alert-row" onClick={() => setComp(c)}>
+                    <span className={`ic${c.score < 40 ? ' crit' : ''}`}><AlertTriangle /></span>
+                    <span><b>{COMPONENT_LABEL[c.component] ?? c.component} low</b><small>{c.score < 40 ? 'Critical' : 'Warning'} · {Math.round(c.score)}/100</small></span>
+                  </button>
+                ))}
+                {!sc && <Loading lines={3} />}
+              </div>
+            </section>
+          </div>
         </div>
       </div>
 
-      <div className="grid g-12">
+      <div className="grid g-12 below">
         <Card className="span-4" title={t('yourScore')} id="score" actions={<Info size={16} className="muted" aria-hidden />}>
           <Q q={score} lines={5}>{(s) => <ScoreHero s={s} />}</Q>
         </Card>
 
-        <Card className="span-5" title={t('breakdown')} id="breakdown">
-          <Q q={score} lines={7}>
-            {(s) => (
-              <div role="list">
-                {s.components.map((c) => {
-                  const I = COMPONENT_ICON[c.component] ?? Zap
-                  return (
-                    <button key={c.component} role="listitem" className="comp-row" onClick={() => setComp(c)} aria-label={`${COMPONENT_LABEL[c.component] ?? c.component}: ${Math.round(c.score)} of 100, weight ${Math.round(c.weight * 100)}%`}>
-                      <span className="comp-ico"><I /></span>
-                      <span className="small">{COMPONENT_LABEL[c.component] ?? c.component} <span className="muted">· {Math.round(c.weight * 100)}%</span></span>
-                      <HBar value={c.score} color={BAND_COLOR[c.score >= 80 ? 'Highly efficient' : c.score >= 65 ? 'Good' : c.score >= 50 ? 'Moderate' : c.score >= 30 ? 'Poor' : 'Very poor']} />
-                      <b className="small" style={{ textAlign: 'right' }}><Estimated show={c.estimated}>{Math.round(c.score)}</Estimated></b>
-                    </button>
-                  )
-                })}
-                <p className="tiny muted" style={{ marginTop: 8 }}>Each bar is that part's score out of 100; the % is its fixed weight in your total. Tap a row to see why.</p>
-              </div>
-            )}
-          </Q>
-        </Card>
-
-        <div className="span-3 stack" style={{ gap: 18 }}>
+        <div className="span-4 stack" style={{ gap: 18 }}>
           {score.data && !dismissed && (score.data.warnings.length > 0 || score.data.confidence !== 'high') && (
             <div className="alert" role="status">
               <AlertTriangle />
@@ -107,28 +167,7 @@ export function Dashboard() {
           </Card>
         </div>
 
-        <Card className="span-5" title={t('usage')} icon={<Zap />} actions={<span className="tiny muted">Last 12 months</span>}>
-          <Q q={home} lines={5}>
-            {(h) => {
-              const months = h.monthly_kwh ?? Array(12).fill(null)
-              const read = months.filter((v) => v != null).length
-              return (
-                <div className="stack">
-                  <div className="row wrap" style={{ gap: 18 }}>
-                    <div><span className="num"><Estimated show={score.data?.annual_grid_kwh_estimated}>{kwh(score.data?.annual_grid_kwh)}</Estimated></span><div className="tiny muted">per year{score.data?.annual_grid_kwh_estimated ? ' (estimated)' : ''}</div></div>
-                    <div><span className="num">{num(score.data?.intensity_kwh_m2)}</span><div className="tiny muted">kWh per m² per year</div></div>
-                    <span className="chip grey">{read} of 12 months metered</span>
-                  </div>
-                  {read === 0 ? <Empty title="No meter data yet"><Link to="/bill">Add a bill photo</Link></Empty> : <MonthlyBars a={months} height={190} width={470} />}
-                </div>
-              )
-            }}
-          </Q>
-        </Card>
-
-        <WeatherCard id={id} />
-
-        <Card className="span-3" title="Popular for homes like yours" icon={<Lightbulb />}>
+        <Card className="span-4" title="Popular for homes like yours" icon={<Lightbulb />}>
           <Q q={plan} lines={4}>
             {(p) => (
               <div className="stack">
@@ -147,6 +186,27 @@ export function Dashboard() {
             )}
           </Q>
         </Card>
+
+        <Card className="span-8" title={t('usage')} icon={<Zap />} actions={<span className="tiny muted">Last 12 months</span>}>
+          <Q q={home} lines={5}>
+            {(h) => {
+              const months = h.monthly_kwh ?? Array(12).fill(null)
+              const read = months.filter((v) => v != null).length
+              return (
+                <div className="stack">
+                  <div className="row wrap" style={{ gap: 18 }}>
+                    <div><span className="num"><Estimated show={score.data?.annual_grid_kwh_estimated}>{kwh(score.data?.annual_grid_kwh)}</Estimated></span><div className="tiny muted">per year{score.data?.annual_grid_kwh_estimated ? ' (estimated)' : ''}</div></div>
+                    <div><span className="num">{num(score.data?.intensity_kwh_m2)}</span><div className="tiny muted">kWh per m² per year</div></div>
+                    <span className="chip grey">{read} of 12 months metered</span>
+                  </div>
+                  {read === 0 ? <Empty title="No meter data yet"><Link to="/bill">Add a bill photo</Link></Empty> : <MonthlyBars a={months} height={190} width={760} />}
+                </div>
+              )
+            }}
+          </Q>
+        </Card>
+
+        <WeatherCard id={id} />
 
         <Card className="span-6" title="Savings potential with the full plan" icon={<CheckCircle2 />}>
           {plan.isLoading || (pkg.isLoading && pkgIds.length > 0) ? <Loading lines={4} /> : pkg.error ? <ErrorState error={pkg.error} onRetry={() => pkg.refetch()} /> : !pkg.data ? (
@@ -262,5 +322,36 @@ function WeatherCard({ id }: { id: string }) {
         }}
       </Q>
     </Card>
+  )
+}
+
+const SHORT: Record<string, string> = {
+  energy_efficiency: 'Efficiency', consumption_intensity: 'Intensity', envelope: 'Envelope', cooling_system: 'Cooling', windows_shading: 'Windows', renewables: 'Solar', smart_use: 'Smart',
+}
+
+function Metric({ icon, title, sub, value, hl }: { icon: ReactNode; title: string; sub: string; value: string; hl?: boolean }) {
+  return (
+    <div className={`metric${hl ? ' hl' : ''}`}>
+      {icon}
+      <span><b>{title}</b><small>{sub}</small></span>
+      <em>{value}</em>
+    </div>
+  )
+}
+
+// Stepped, hatched area of the 12 monthly readings, like a light-exposure chart.
+function UseSteps({ months }: { months: (number | null)[] }) {
+  const vals = months.length ? months : Array(12).fill(null)
+  const known = vals.filter((v): v is number => v != null)
+  if (!known.length) return <p className="small muted">No meter data yet. <Link to="/bill">Add a bill</Link></p>
+  const max = Math.max(...known) || 1
+  const W = 280, H = 96, bw = W / 12
+  return (
+    <svg viewBox={`0 0 ${W} ${H + 22}`} width="100%" role="img" aria-label={`Monthly electricity use, peak ${num(max)} kWh`} style={{ color: 'var(--ink-3)' }}>
+      <defs><pattern id="use-hatch" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="5" height="5" fill="rgba(63,208,220,.16)" /><line x1="0" y1="0" x2="0" y2="5" stroke="rgba(63,208,220,.85)" strokeWidth="1.4" /></pattern></defs>
+      {[0, 0.5, 1].map((f) => <line key={f} x1="0" x2={W} y1={H - H * f} y2={H - H * f} stroke="rgba(255,255,255,.14)" strokeDasharray="2 3" />)}
+      {vals.map((v, i) => v == null ? null : <rect key={i} x={i * bw + 1} y={H - (H * v) / max} width={bw - 2} height={(H * v) / max} fill="url(#use-hatch)" stroke="rgba(63,208,220,.9)" strokeWidth="1" />)}
+      {['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'].map((m, i) => <text key={i} x={i * bw + bw / 2} y={H + 15} fontSize="10" textAnchor="middle" fill="currentColor">{m}</text>)}
+    </svg>
   )
 }

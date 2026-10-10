@@ -14,10 +14,10 @@ export function Gauge({ score, size = 168, stroke = 14, color, hatched = false, 
     <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} role="img" aria-label={label ?? `Score ${score} out of 100`}>
       <defs>
         <pattern id={`h${id}`} width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
-          <rect width="6" height="6" fill={col} /><line x1="0" y1="0" x2="0" y2="6" stroke="#fff" strokeWidth="2.5" />
+          <rect width="6" height="6" fill={col} /><line x1="0" y1="0" x2="0" y2="6" stroke="#0f3039" strokeWidth="2.5" />
         </pattern>
       </defs>
-      <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="#ebe9e2" strokeWidth={stroke} />
+      <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="rgba(255,255,255,0.12)" strokeWidth={stroke} />
       <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke={hatched ? `url(#h${id})` : col} strokeWidth={stroke} strokeLinecap="round"
         strokeDasharray={`${(c * Math.max(0, Math.min(100, score))) / 100} ${c}`} transform={`rotate(-90 ${size / 2} ${size / 2})`} />
       <text x="50%" y="50%" textAnchor="middle" dominantBaseline="central" style={{ font: `500 ${size * 0.27}px var(--serif)` }} fill="var(--ink)">{score}</text>
@@ -50,16 +50,16 @@ export function MonthlyBars({ a, b, aLabel = 'Current home', bLabel = 'With this
     <div>
       <svg viewBox={`0 0 ${W} ${H}`} width="100%" role="img" aria-label={`Monthly ${unit}: ${aLabel}${b ? ` vs ${bLabel}` : ''}`}>
         {ticks(max).map((t) => (
-          <g key={t}><line x1={pl} x2={W} y1={y(t)} y2={y(t)} stroke="#eeece5" /><text x={pl - 6} y={y(t) + 4} textAnchor="end" fontSize="10.5" fill="var(--ink-3)">{num(t)}</text></g>
+          <g key={t}><line x1={pl} x2={W} y1={y(t)} y2={y(t)} stroke="rgba(255,255,255,0.12)" /><text x={pl - 6} y={y(t) + 4} textAnchor="end" fontSize="10.5" fill="var(--ink-3)">{num(t)}</text></g>
         ))}
         {MONTHS.map((m, i) => {
           const x0 = pl + i * slot + (slot - (b ? bw * 2 + 3 : bw)) / 2
           const va = a[i], vb = b?.[i]
           return (
             <g key={m} onMouseEnter={() => setHover(i)} onMouseLeave={() => setHover(null)}>
-              <rect x={pl + i * slot} y={pt} width={slot} height={H - pb - pt} fill={hover === i ? '#f4f3ee' : 'transparent'} />
+              <rect x={pl + i * slot} y={pt} width={slot} height={H - pb - pt} fill={hover === i ? 'rgba(255,255,255,0.06)' : 'transparent'} />
               {va != null ? <rect x={x0} y={y(va)} width={bw} height={y(0) - y(va)} rx="3" fill={b ? 'var(--blue)' : 'var(--leaf-2)'} />
-                : <rect x={x0} y={y(0) - 24} width={bw} height={24} rx="3" fill="none" stroke="#cfcbbf" strokeDasharray="3 3" />}
+                : <rect x={x0} y={y(0) - 24} width={bw} height={24} rx="3" fill="none" stroke="rgba(255,255,255,0.35)" strokeDasharray="3 3" />}
               {b && vb != null && <rect x={x0 + bw + 3} y={y(vb)} width={bw} height={y(0) - y(vb)} rx="3" fill="var(--green)" />}
               <text x={pl + i * slot + slot / 2} y={H - 6} textAnchor="middle" fontSize="10.5" fill="var(--ink-3)">{m}</text>
             </g>
@@ -101,7 +101,7 @@ export function Waterfall({ start, steps, end, startLabel, endLabel, unit }: {
   return (
     <svg viewBox={`0 0 ${W} ${H}`} width="100%" role="img" aria-label={`${startLabel} ${num(start)} ${unit} to ${endLabel} ${num(end)} ${unit}`}>
       {ticks(max).map((t) => (
-        <g key={t}><line x1={pl} x2={W} y1={y(t)} y2={y(t)} stroke="#eeece5" /><text x={pl - 6} y={y(t) + 4} textAnchor="end" fontSize="10.5" fill="var(--ink-3)">{num(t)}</text></g>
+        <g key={t}><line x1={pl} x2={W} y1={y(t)} y2={y(t)} stroke="rgba(255,255,255,0.12)" /><text x={pl - 6} y={y(t) + 4} textAnchor="end" fontSize="10.5" fill="var(--ink-3)">{num(t)}</text></g>
       ))}
       <WBar x={pl + slot * 0.5} w={bw} y0={y(start)} y1={y(0)} fill="var(--sand)" label={num(start)} name={startLabel} H={H} />
       {bars.map((b, i) => {
@@ -109,7 +109,7 @@ export function Waterfall({ start, steps, end, startLabel, endLabel, unit }: {
         const up = b.delta > 0
         return (
           <g key={b.label + i}>
-            <line x1={pl + slot * (i + 0.5) + bw / 2} x2={pl + slot * (i + 1.5) - bw / 2} y1={y(b.from)} y2={y(b.from)} stroke="#cfcbbf" strokeDasharray="3 3" />
+            <line x1={pl + slot * (i + 0.5) + bw / 2} x2={pl + slot * (i + 1.5) - bw / 2} y1={y(b.from)} y2={y(b.from)} stroke="rgba(255,255,255,0.35)" strokeDasharray="3 3" />
             <rect x={pl + slot * (i + 1.5) - bw / 2} y={top} width={bw} height={Math.max(2, bot - top)} rx="4" fill={up ? 'var(--band-4)' : 'var(--leaf-2)'} />
             <text x={pl + slot * (i + 1.5)} y={top - 6} textAnchor="middle" fontSize="11" fontWeight="600" fill={up ? 'var(--red)' : 'var(--green)'}>{up ? '+' : '−'}{num(Math.abs(b.delta))}</text>
             <foreignObject x={pl + slot * (i + 1)} y={H - pb + 6} width={slot} height={pb - 6}>
@@ -152,10 +152,10 @@ export function HeatLine({ months, values, heat, heatTitle, height = 220 }: {
     <svg viewBox={`0 0 ${W} ${H}`} width="100%" role="img" aria-label="Monthly electricity use against heat">
       {heat?.map((h, i) => (
         <rect key={i} x={pl + slot * i + 1} y={4} width={slot - 2} height={22} rx="3"
-          fill={h == null ? '#f2f0ea' : heatColor((h ?? 0) / hmax)} data-testid="heat-cell"><title>{`${months[i]}: ${heatTitle ? heatTitle(i) : h ?? 'no data'}`}</title></rect>
+          fill={h == null ? 'rgba(255,255,255,0.08)' : heatColor((h ?? 0) / hmax)} data-testid="heat-cell"><title>{`${months[i]}: ${heatTitle ? heatTitle(i) : h ?? 'no data'}`}</title></rect>
       ))}
       {ticks(max).map((t) => (
-        <g key={t}><line x1={pl} x2={W} y1={y(t)} y2={y(t)} stroke="#eeece5" /><text x={pl - 6} y={y(t) + 4} textAnchor="end" fontSize="10.5" fill="var(--ink-3)">{num(t)}</text></g>
+        <g key={t}><line x1={pl} x2={W} y1={y(t)} y2={y(t)} stroke="rgba(255,255,255,0.12)" /><text x={pl - 6} y={y(t) + 4} textAnchor="end" fontSize="10.5" fill="var(--ink-3)">{num(t)}</text></g>
       ))}
       <path d={path} fill="none" stroke="var(--leaf)" strokeWidth="2" />
       {pts.map((p, i) => p && <circle key={i} cx={p[0]} cy={p[1]} r="3.5" fill="var(--leaf)"><title>{`${months[i]}: ${num(values[i])} kWh`}</title></circle>)}
@@ -173,7 +173,7 @@ export function Histogram({ edges, counts, height = 200 }: { edges: number[]; co
   return (
     <svg viewBox={`0 0 ${W} ${H}`} width="100%" role="img" aria-label="Distribution of scores">
       {ticks(max).map((t) => (
-        <g key={t}><line x1={pl} x2={W} y1={y(t)} y2={y(t)} stroke="#eeece5" /><text x={pl - 6} y={y(t) + 4} textAnchor="end" fontSize="10.5" fill="var(--ink-3)">{num(t)}</text></g>
+        <g key={t}><line x1={pl} x2={W} y1={y(t)} y2={y(t)} stroke="rgba(255,255,255,0.12)" /><text x={pl - 6} y={y(t) + 4} textAnchor="end" fontSize="10.5" fill="var(--ink-3)">{num(t)}</text></g>
       ))}
       {counts.map((c, i) => (
         <rect key={i} x={pl + i * bw + 1} y={y(c)} width={bw - 2} height={y(0) - y(c)} rx="2" fill={BAND_COLOR[bandOf(edges[i] + 2.5)]}>
@@ -210,7 +210,7 @@ export function RangeBar({ lo, hi, mid, min, max, format }: { lo: number; hi: nu
   const p = (v: number) => `${((v - min) / (max - min || 1)) * 100}%`
   return (
     <div style={{ padding: '18px 0 4px' }}>
-      <div style={{ position: 'relative', height: 6, background: '#edeee8', borderRadius: 99 }}>
+      <div style={{ position: 'relative', height: 6, background: 'rgba(255,255,255,0.1)', borderRadius: 99 }}>
         <div style={{ position: 'absolute', left: p(lo), width: `calc(${p(hi)} - ${p(lo)})`, top: 0, bottom: 0, background: 'var(--leaf-2)', borderRadius: 99 }} />
         {mid != null && <div style={{ position: 'absolute', left: p(mid), top: -5, width: 16, height: 16, marginLeft: -8, borderRadius: '50%', background: 'var(--green)', border: '3px solid #fff', boxShadow: '0 0 0 1px var(--line)' }} />}
       </div>
@@ -230,9 +230,9 @@ export function CityDots({ points, onPick, selected }: {
   const smax = Math.max(1, ...points.map((p) => p.size))
   const labelled = new Set([...points].sort((a, b) => b.size - a.size).slice(0, 8).map((p) => p.city))
   return (
-    <svg viewBox={`0 0 ${W} ${H}`} width="100%" role="img" aria-label="Financed emissions by city" style={{ background: '#eef3ef', borderRadius: 12 }}>
-      {[10, 15, 20, 25, 30, 35].map((l) => <line key={l} x1="0" x2={W} y1={y(l)} y2={y(l)} stroke="#dfe8e2" />)}
-      {[70, 75, 80, 85, 90, 95].map((l) => <line key={l} y1="0" y2={H} x1={x(l)} x2={x(l)} stroke="#dfe8e2" />)}
+    <svg viewBox={`0 0 ${W} ${H}`} width="100%" role="img" aria-label="Financed emissions by city" style={{ background: 'rgba(255,255,255,0.05)', borderRadius: 12 }}>
+      {[10, 15, 20, 25, 30, 35].map((l) => <line key={l} x1="0" x2={W} y1={y(l)} y2={y(l)} stroke="rgba(255,255,255,0.08)" />)}
+      {[70, 75, 80, 85, 90, 95].map((l) => <line key={l} y1="0" y2={H} x1={x(l)} x2={x(l)} stroke="rgba(255,255,255,0.08)" />)}
       {[...points].sort((a, b) => b.size - a.size).map((p) => {
         const r = 5 + 17 * Math.sqrt(p.size / smax)
         return (

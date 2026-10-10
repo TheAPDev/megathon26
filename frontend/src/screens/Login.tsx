@@ -44,7 +44,7 @@ export default function Login() {
   }
   const up = tab === 'up'
   return (
-    <div style={{ minHeight: '100%', display: 'grid', placeItems: 'center', background: 'var(--forest)', padding: 16 }}>
+    <div style={{ minHeight: '100%', display: 'grid', placeItems: 'center', background: 'radial-gradient(900px 600px at 55% 35%, #1f6b6f, #0b2a33 60%, #07141a)', padding: 16 }}>
       <form className="card stack" style={{ width: 'min(420px, 100%)', gap: 14 }} onSubmit={submit}>
         <div className="row"><BrandMark /><div><b style={{ font: '500 24px var(--serif)' }}>Green Ghar</b><div className="small muted">{up ? 'Create your account' : 'Sign in to see your home'}</div></div></div>
         <div className="row" role="tablist" aria-label="Account">

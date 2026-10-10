@@ -90,7 +90,7 @@ export default function BillToScore() {
           const idx = { upload: 0, reading: 1, review: 2 }[stage]
           return (
             <li key={t} className="row" aria-current={idx === i ? 'step' : undefined} style={{ flex: 1, minWidth: 200, opacity: idx >= i ? 1 : 0.55 }}>
-              <span className="chip" style={{ width: 30, height: 30, justifyContent: 'center', padding: 0, background: idx > i ? 'var(--green)' : idx === i ? 'var(--forest)' : '#e8e6df', color: idx >= i ? '#fff' : 'var(--ink-2)' }}>{idx > i ? <CheckCircle2 size={16} /> : i + 1}</span>
+              <span className="chip" style={{ width: 30, height: 30, justifyContent: 'center', padding: 0, background: idx > i ? 'var(--green)' : idx === i ? '#0d2630' : 'rgba(255,255,255,0.14)', color: idx >= i ? '#fff' : 'var(--ink-2)' }}>{idx > i ? <CheckCircle2 size={16} /> : i + 1}</span>
               <span><b className="small">{t}</b><div className="tiny muted">{d}</div></span>
             </li>
           )
@@ -101,7 +101,7 @@ export default function BillToScore() {
         {stage !== 'review' && (
           <Card className="span-7" title="Step 1: upload your electricity bill">
             <div onDragOver={(e) => { e.preventDefault(); setDrag(true) }} onDragLeave={() => setDrag(false)} onDrop={onDrop}
-              className="state" style={{ border: `2px dashed ${drag ? 'var(--leaf)' : 'var(--line)'}`, borderRadius: 14, background: drag ? 'var(--mint-2)' : '#fcfbf8', minHeight: 220 }}>
+              className="state" style={{ border: `2px dashed ${drag ? 'var(--leaf)' : 'var(--line)'}`, borderRadius: 14, background: drag ? 'var(--mint-2)' : 'rgba(255,255,255,0.05)', minHeight: 220 }}>
               {stage === 'reading' ? <Loader2 className="spin" /> : <UploadCloud />}
               <b>{stage === 'reading' ? 'Reading your bill…' : 'Drag and drop your bill here'}</b>
               {stage === 'upload' && (

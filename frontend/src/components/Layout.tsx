@@ -1,4 +1,4 @@
-import { Building2, ChevronDown, FileScan, Home, Landmark, LogOut, Menu, MessagesSquare, SlidersHorizontal, Sun, Wallet } from 'lucide-react'
+import { Building2, ChevronDown, CloudSun, FileScan, Grip, Home, Landmark, LogOut, MapPin, Menu, MessagesSquare, Settings, SlidersHorizontal, Sun, Wallet } from 'lucide-react'
 import { useEffect, useState, type ReactNode } from 'react'
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { useConfig, useHome, useMyHomes } from '../api/hooks'
@@ -11,9 +11,8 @@ import { Drawer } from './ui'
 export function BrandMark({ size = 40 }: { size?: number }) {
   return (
     <svg className="brand-mark" width={size} height={size} viewBox="0 0 64 64" aria-hidden>
-      <circle cx="32" cy="32" r="30" fill="#e8dcc4" />
-      <path d="M14 34 32 18l18 16v14a2 2 0 0 1-2 2H16a2 2 0 0 1-2-2z" fill="#123526" />
-      <path d="M32 47c0-8 4-13 11-14-1 8-5 13-11 14z" fill="#7fbf8f" />
+      <path d="M8 34 32 12l24 22h-8v18a2 2 0 0 1-2 2H18a2 2 0 0 1-2-2V34z" fill="#eaf4f4" />
+      <path d="M32 50c0-9 5-15 13-16-1 9-6 15-13 16z" fill="#3fd0dc" />
     </svg>
   )
 }
@@ -34,36 +33,19 @@ export function Layout() {
     { to: '/paisa', label: t('paisa'), icon: <Wallet /> },
     { to: '/saathi', label: t('saathi'), icon: <MessagesSquare /> },
     { to: '/garmi', label: t('garmi'), icon: <Sun /> },
+    ...(canLend ? [{ to: '/portfolio', label: t('portfolio'), icon: <Landmark /> }] : []),
   ]
   return (
     <div className="shell">
-      <aside className={`sidebar${open ? ' open' : ''}`} aria-label="Main navigation">
-        <NavLink to="/" className="brand">
-          <BrandMark />
-          <div><div className="brand-name">Green Ghar</div><div className="brand-tag">Greener homes, brighter tomorrows</div></div>
-        </NavLink>
-        <nav className="nav">
-          {nav.map((n) => <NavLink key={n.to} to={n.to} end={n.end}>{n.icon}{n.label}</NavLink>)}
-          {canLend && (
-            <>
-              <div className="nav-sep" />
-              <div className="nav-label">{t('forLenders')}</div>
-              <NavLink to="/portfolio"><Landmark />{t('portfolio')}</NavLink>
-            </>
-          )}
-        </nav>
-        <div className="sidebar-foot">
-          <div className="sidebar-promo">
-            <p>Smaller footprints, brighter tomorrows.</p>
-            <small>Scores and savings come from your own bills and your city's climate.</small>
-          </div>
-          {authMode === 'supabase' && user && (
-            <button className="btn ghost" style={{ background: 'transparent', color: '#d7e2da', borderColor: 'rgba(255,255,255,.2)' }} onClick={() => signOut()}>
-              <LogOut /> {t('signOut')}
-            </button>
-          )}
-          <span>Green Ghar v1.0{authMode === 'demo' ? ' · demo mode' : ''}</span>
-        </div>
+      <aside className={`rail${open ? ' open' : ''}`} aria-label="Main navigation">
+        <span className="rail-btn dots" aria-hidden><Grip size={18} /></span>
+        {nav.map((n) => (
+          <NavLink key={n.to} to={n.to} end={n.end} aria-label={n.label}>{n.icon}<span className="tip">{n.label}</span></NavLink>
+        ))}
+        <div className="gap" />
+        {authMode === 'supabase' && user && (
+          <button className="rail-btn" onClick={() => signOut()} aria-label={t('signOut')}><LogOut /><span className="tip">{t('signOut')}</span></button>
+        )}
       </aside>
       {open && <div className="drawer-back" style={{ zIndex: 45 }} onClick={() => setOpen(false)} />}
       <div className="main">
@@ -74,30 +56,52 @@ export function Layout() {
   )
 }
 
+const TABS = [
+  { to: '/', label: 'Overview', end: true },
+  { to: '/studio', label: 'Plan' },
+  { to: '/paisa', label: 'Money' },
+  { to: '/saathi', label: 'Advisor' },
+]
+
 function Topbar({ onMenu }: { onMenu: () => void }) {
   const lang = useSession((s) => s.language)
   const setLang = useSession((s) => s.setLanguage)
   const homeId = useSession((s) => s.activeHomeId)
   const home = useHome(homeId)
   const [picker, setPicker] = useState(false)
+  const [settings, setSettings] = useState(false)
   const t = useT()
+  const [now, setNow] = useState(() => new Date())
+  useEffect(() => { const i = setInterval(() => setNow(new Date()), 30000); return () => clearInterval(i) }, [])
+  const clock = now.toLocaleTimeString('en-IN', { hour: 'numeric', minute: '2-digit' }).toUpperCase()
   return (
     <header className="topbar">
       <button className="icon-btn menu-btn" onClick={onMenu} aria-label="Open menu"><Menu size={18} /></button>
+      <NavLink to="/" className="brand-lockup" aria-label="Green Ghar home"><BrandMark size={26} />Green Ghar</NavLink>
+      <nav className="top-tabs" aria-label="Sections">
+        {TABS.map((x) => <NavLink key={x.to} to={x.to} end={x.end}>{x.label}</NavLink>)}
+      </nav>
       <div className="grow" />
-      <button className="home-switch" onClick={() => setPicker(true)} aria-haspopup="dialog" aria-label={t('switchHome')}>
-        <span className="ico"><Building2 size={18} /></span>
-        <span style={{ flex: 1 }}>
-          <b>{homeId ? (home.data ? `${humanize(home.data.dwelling_type)}` : homeId) : t('addHome')}</b>
-          <small>{home.data ? `${home.data.city} · ${homeId}` : homeId ? 'Loading…' : 'No home selected'}</small>
-        </span>
-        <ChevronDown size={16} />
+      <span className="pill hide-sm"><CloudSun aria-hidden />{clock}</span>
+      <button className="pill" onClick={() => setPicker(true)} aria-haspopup="dialog" aria-label={t('switchHome')}>
+        <MapPin aria-hidden />
+        <span>{homeId ? (home.data ? home.data.city : homeId) : t('addHome')}</span>
+        {home.data && <span className="hide-sm muted">{humanize(home.data.dwelling_type)}</span>}
+        <ChevronDown size={14} />
       </button>
-      <div className="lang" role="group" aria-label="Language">
-        <button aria-pressed={lang === 'en'} onClick={() => setLang('en')}>EN</button>
-        <button aria-pressed={lang === 'hi'} onClick={() => setLang('hi')} lang="hi">हि</button>
-      </div>
+      <span className="top-sep hide-sm" aria-hidden />
+      <button className="icon-btn" onClick={() => setSettings(true)} aria-label="Settings"><Settings size={18} /></button>
       <HomePicker open={picker} onClose={() => setPicker(false)} />
+      <Drawer open={settings} onClose={() => setSettings(false)} title="Settings">
+        <div className="stack">
+          <b className="small">Language</b>
+          <div className="lang" role="group" aria-label="Language" style={{ alignSelf: 'flex-start' }}>
+            <button aria-pressed={lang === 'en'} onClick={() => setLang('en')}>English</button>
+            <button aria-pressed={lang === 'hi'} onClick={() => setLang('hi')} lang="hi">हिन्दी</button>
+          </div>
+          <p className="small muted">Your score, plans and the AI Saathi follow this choice.</p>
+        </div>
+      </Drawer>
     </header>
   )
 }
