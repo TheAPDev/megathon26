@@ -5,6 +5,11 @@ if not exist .venv python -m venv .venv
 call .venv\Scripts\activate
 python -m pip install --upgrade pip
 pip install -r requirements-dev.txt
+if not exist .env if not exist local.env (
+  copy .env.example .env >nul
+  echo Opening .env: paste your API keys after each = sign, save, then close Notepad.
+  notepad .env
+)
 echo.
 echo Setup done. Next:
 echo   connect_supabase.bat   (once: paste the service-role key to use the live database)
