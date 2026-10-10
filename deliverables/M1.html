@@ -1,0 +1,106 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>M1 Approach - Green Ghar</title>
+<style>
+@page { size: A4; margin: 13mm 14mm 12mm 14mm; }
+* { box-sizing: border-box; }
+body { font-family: Inter, sans-serif; font-size: 8.75pt; line-height: 1.38; color: #1d2a24; margin: 0; }
+h1 { font-family: "Inter Display", Inter; font-size: 17pt; margin: 0; color: #0f4d34; letter-spacing: -0.2px; }
+.sub { font-size: 8.5pt; color: #4b5d55; margin: 2px 0 8px; }
+.bar { border-top: 2.5px solid #1b7a52; margin-bottom: 8px; }
+h2 { font-family: "Inter Display", Inter; font-size: 11pt; color: #0f4d34; margin: 9px 0 4px; padding-bottom: 2px; border-bottom: 1px solid #cfe3d8; }
+h2 span { color: #1b7a52; margin-right: 5px; }
+h3 { font-size: 8.9pt; margin: 6px 0 2px; color: #123d2c; }
+p { margin: 0 0 5px; }
+ul { margin: 0 0 5px; padding-left: 14px; }
+li { margin-bottom: 2px; }
+b { color: #0f3b2a; }
+.two { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.box { background: #f2f8f4; border: 1px solid #d3e7db; border-radius: 4px; padding: 6px 8px; }
+table { width: 100%; border-collapse: collapse; font-size: 8pt; margin: 3px 0 5px; }
+th, td { border: 1px solid #d3e2da; padding: 2.5px 5px; text-align: left; vertical-align: top; }
+th { background: #e4f1ea; color: #0f3b2a; }
+.pipe { display: flex; align-items: stretch; gap: 0; margin: 4px 0 6px; }
+.st { flex: 1; background: #fff; border: 1.3px solid #1b7a52; border-radius: 4px; padding: 4px 5px; font-size: 7.6pt; line-height: 1.3; }
+.st b { display: block; font-size: 8pt; color: #0f4d34; margin-bottom: 1px; }
+.ar { width: 12px; display: flex; align-items: center; justify-content: center; color: #1b7a52; font-weight: 700; }
+.layer { display: grid; grid-template-columns: 92px 1fr; gap: 0; margin-bottom: 3px; }
+.layer .k { background: #1b7a52; color: #fff; font-weight: 600; font-size: 7.6pt; padding: 3px 5px; border-radius: 3px 0 0 3px; }
+.layer .v { border: 1px solid #cfe3d8; border-left: 0; padding: 3px 6px; font-size: 7.8pt; border-radius: 0 3px 3px 0; }
+.small { font-size: 7.6pt; color: #4b5d55; }
+.pb { break-before: page; }
+</style></head><body>
+
+<h1>Green Ghar Score: M1 Approach</h1>
+<div class="sub">Team Spades · Megathon 2026 · An explainable home energy-efficiency score and retrofit advisor for Indian homes and lenders</div>
+<div class="bar"></div>
+
+<h2><span>1</span>Problem statement and our understanding</h2>
+<p><b>Problem.</b> The task is to give every home a transparent <b>Green Home Score (0–100)</b> from the data a lender or homeowner actually has. The score must show <b>why</b> the home scored as it did and <b>which retrofits</b> would raise it, with costs, savings and CO₂ impact. A conversational advisor explains the result in plain language, and a portfolio view lets a bank find, rank and finance its least efficient homes.</p>
+<p><b>Our understanding: what makes this hard in India.</b></p>
+<ul>
+<li><b>The energy problem is cooling, not heating.</b> Load is driven by cooling degree-days, AC star rating (ISEER), west-facing glass, roof heat gain and the AC set-point. Most Western scoring logic assumes heating-dominated homes and transfers badly.</li>
+<li><b>Data is sparse and messy.</b> Most homes have no energy audit. What exists is a paper or PDF DISCOM bill (often in Hindi), partial appliance details, an optional BEE star label, and gaps in monthly readings. Self-reported data can contradict the meter.</li>
+<li><b>Savings depend on the tariff.</b> Slab tariffs (telescopic, free-unit schemes, category switches) and net metering decide what a kWh saved is worth. LPG cooking and diesel backup carry their own emission factors.</li>
+<li><b>Retrofits interact.</b> Fixing the envelope first shrinks what a new AC can save, so package savings are not the sum of standalone savings. Some "green" moves backfire: on today's coal-heavy grid (CEA 0.727 kg CO₂/kWh), switching LPG to induction <i>raises</i> CO₂ unless paired with solar.</li>
+<li><b>Trust and compliance.</b> A lender cannot act on a black-box number or on an LLM that invents savings figures. Every number shown must trace back to a deterministic computation, and personal data must stay protected (DPDP Act 2023).</li>
+</ul>
+
+<h2><span>2</span>Idea / abstract</h2>
+<p><b>Green Ghar</b> is a hybrid <b>physics + machine-learning</b> engine behind a <b>grounded multilingual advisor</b>.</p>
+<ul>
+<li>A deterministic India-specific energy model (climate zone, ISEER, envelope, appliances, cooking, backup, rooftop PV) estimates annual kWh and CO₂. A LightGBM model learns the residual between that estimate and real bills.</li>
+<li>The score is a <b>fixed, published, monotonic</b> weighted sum of seven sub-scores: energy efficiency 25%, consumption intensity 20%, envelope 15%, cooling system 15%, windows and shading 10%, renewables 10%, smart use 5%.</li>
+<li>Bands: 80+ Highly efficient · 65–79 Good · 50–64 Moderate · 30–49 Poor · &lt;30 Very poor. Every score carries a confidence level and data-conflict warnings.</li>
+<li>Retrofits are simulated <b>sequentially</b> in interaction order, priced at the home's real slab tariff, ranked by a LambdaRank model, and turned into a payback roadmap with subsidies (PM Surya Ghar) and green-loan EMIs.</li>
+<li>A hedonic model with conformal intervals estimates the property-value uplift.</li>
+<li>An LLM advisor answers in <b>English, Hindi and Hinglish</b>, by text or voice, on Telegram. It only calls engine tools; a <b>numeric verifier</b> rejects any reply whose numbers do not match the tool outputs, and a template answer is used instead.</li>
+<li>For lenders, a portfolio API reports financed emissions (PCAF-style attribution), the worst homes, green-loan target lists and housing-society (RWA) common-solar leads.</li>
+</ul>
+<p class="small">Differentiators: bill photo → score (OCR); heatwave-readiness check; sequential, tariff-aware packages; a verified-number LLM; all of it built on free tiers.</p>
+
+<h2><span>3</span>High-level approach, pipeline and architecture</h2>
+<div class="pipe">
+  <div class="st"><b>1 · Ingest</b>Form / API, bill photo (Gemini Flash → Tesseract OCR), voice (Whisper STT), Telegram</div><div class="ar">→</div>
+  <div class="st"><b>2 · Validate</b>Pydantic schema, unit and range checks, missing-month imputation, label vs. meter conflict rule</div><div class="ar">→</div>
+  <div class="st"><b>3 · Energy model</b>Physics (CDD base 24 °C, ISEER, envelope) × LightGBM residual → kWh, ₹, CO₂</div><div class="ar">→</div>
+  <div class="st"><b>4 · Score</b>7 monotonic sub-scores · fixed weights · band · confidence</div><div class="ar">→</div>
+  <div class="st"><b>5 · Retrofits</b>Sequential simulation · slab tariff pricing · LambdaRank · roadmap and finance</div><div class="ar">→</div>
+  <div class="st"><b>6 · Explain</b>LLM tool-calls → numeric verifier → EN/HI reply (text or TTS)</div>
+</div>
+
+<div class="layer"><div class="k">Channels</div><div class="v">REST API (FastAPI, 33 routes) · Telegram bot (webhook) · voice in (Groq / NVIDIA Whisper) and out (NVIDIA Magpie TTS, edge-tts fallback) · bill-photo upload</div></div>
+<div class="layer"><div class="k">Intelligence</div><div class="v">Intent router (Hinglish, negation) → engine tools → LLM: NVIDIA NIM (primary) → Groq (fallback) → deterministic templates. The verifier handles lakh/crore, Indian digit grouping, Devanagari digits and % (0.5% tolerance).</div></div>
+<div class="layer"><div class="k">Core engine</div><div class="v">physics · consumption · score · tariff (state slabs, free units, net metering) · retrofits · solar · plan · finance · roadmap · heatwave · portfolio. Pure Python, deterministic, versioned reference data.</div></div>
+<div class="layer"><div class="k">ML models</div><div class="v">Energy: hybrid physics × LightGBM (log residual). Ranker: LightGBM LambdaRank. Value: hedonic LightGBM, monotone in score, split-conformal 80% intervals and 10 bootstrap models. Leakage guard on forbidden features.</div></div>
+<div class="layer"><div class="k">Data</div><div class="v">Supabase Postgres (ap-south-1): schemas <i>public</i> / <i>gg</i> (SQL port of the score and package engine, at parity with Python) / <i>synth</i> (in-database generator). Row-level security on every table, Auth JWT, a Storage bucket for bills, portfolio RPCs. Synthetic population of 50k+ homes calibrated to public sources (CEA, BEE, DISCOM tariffs, IMD climate, Census, NFHS).</div></div>
+<div class="layer"><div class="k">Ops</div><div class="v">Docker / compose, request-ID and timing middleware, uniform error envelope, OpenAPI spec, model and data cards, responsible-AI note, one-command rebuild (<i>make data train test</i>).</div></div>
+
+<div class="two" style="margin-top:4px">
+<div class="box"><h3 style="margin-top:0">Key design decisions</h3>
+<ul style="margin-bottom:0">
+<li>Physics first, ML second: explainable, monotonic and works with zero bills; ML corrects the bias where bills exist.</li>
+<li>Fixed weights instead of learned weights, so a lender can audit and reproduce every score.</li>
+<li>The LLM never computes. It only phrases tool outputs, and the verifier enforces this.</li>
+</ul></div>
+<div class="box"><h3 style="margin-top:0">Data flow for one home</h3>
+<ul style="margin-bottom:0">
+<li>Bill photo → 12 months of kWh and tariff → Home record → score with sub-scores and warnings.</li>
+<li>Top-k retrofit package → ₹/yr saved, CO₂ change, payback, score after → advisor reply.</li>
+<li>Score is stored in Supabase → appears in the lender's portfolio summary and ranking.</li>
+</ul></div>
+</div>
+
+<h2><span>4</span>Planned testing methodology</h2>
+<table>
+<tr><th style="width:20%">What we test</th><th>Method</th><th style="width:27%">Pass criterion</th></tr>
+<tr><td><b>Scoring correctness</b></td><td>Unit tests: the weights sum to 1, band edges, tariff slabs for each state; a hidden-scenario suite of hand-built archetype homes (e.g. old 1-star AC on a west-facing top floor vs. a 5-star inverter home with PV).</td><td>Exact expected bands; archetypes ordered correctly</td></tr>
+<tr><td><b>Monotonicity / properties</b></td><td>Property tests: improving any single input (star rating, LED share, insulation, PV, set-point) must never lower the score or raise the kWh estimate.</td><td>0 violations across randomized homes</td></tr>
+<tr><td><b>Energy and ranking models</b></td><td>Home-grouped 70/15/15 split (seed 42), so no home appears in both train and test. Compared against a median-by-zone/type baseline, physics-only and direct LightGBM. Ranker scored with NDCG@5 and Precision@3 against popularity and rule-ROI baselines. Leakage test on forbidden features.</td><td>Beat all baselines on the held-out test set; infeasible recommendations = 0%</td></tr>
+<tr><td><b>Uncertainty</b></td><td>Empirical coverage of the split-conformal value intervals on test homes; confidence level reported for each score.</td><td>Coverage ≈ 80% (α = 0.2)</td></tr>
+<tr><td><b>Retrofit realism</b></td><td>Package savings vs. the sum of standalone savings (interaction check); the LPG → induction CO₂ sign check; payback against tariff hand calculations.</td><td>Package ≤ sum; signs physically correct</td></tr>
+<tr><td><b>LLM groundedness</b></td><td>180 held-out prompts in 6 categories (explain score, explain a recommendation, what-if, infeasible request, missing data, conflicting data). Adversarial and Hinglish prompts, plus injected wrong numbers to confirm the verifier rejects them.</td><td>Groundedness 100%, unsupported claims 0%</td></tr>
+<tr><td><b>Fairness</b></td><td>Score and error breakdown by city, climate zone, dwelling type, tenure and income band; error and score gaps reviewed before release.</td><td>No group MAPE gap &gt; 5 pp</td></tr>
+<tr><td><b>System and integration</b></td><td>API contract tests (all routes, error envelope), SQL ↔ Python parity fixtures for the score and package engines, bill-OCR fixtures, auth/RLS access tests, latency benchmarks.</td><td>Parity exact; p95 score &lt; 300 ms, what-if &lt; 500 ms</td></tr>
+</table>
+<p class="small"><b>Status:</b> pipeline implemented, 58 automated tests passing. Early held-out results: energy MAPE 9.7% vs. 26.0% for the baseline (R² 0.94); ranker NDCG@5 0.986; template-mode groundedness 100%. Final numbers will be reported in later milestones.</p>
+</body></html>

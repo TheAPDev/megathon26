@@ -1,0 +1,72 @@
+<!doctype html><html><head><meta charset="utf-8"><title>M2 Mid-submission - Green Ghar</title><style>
+@page { size: A4; margin: 13mm 14mm 12mm 14mm; }
+* { box-sizing: border-box; }
+body { font-family: Inter, sans-serif; font-size: 8.75pt; line-height: 1.38; color: #1d2a24; margin: 0; }
+h1 { font-family: "Inter Display", Inter; font-size: 17pt; margin: 0; color: #0f4d34; letter-spacing: -0.2px; }
+.sub { font-size: 8.5pt; color: #4b5d55; margin: 2px 0 8px; }
+.bar { border-top: 2.5px solid #1b7a52; margin-bottom: 8px; }
+h2 { font-family: "Inter Display", Inter; font-size: 11pt; color: #0f4d34; margin: 9px 0 4px; padding-bottom: 2px; border-bottom: 1px solid #cfe3d8; }
+h2 span { color: #1b7a52; margin-right: 5px; }
+h3 { font-size: 8.9pt; margin: 6px 0 2px; color: #123d2c; }
+p { margin: 0 0 5px; }
+ul { margin: 0 0 5px; padding-left: 14px; }
+li { margin-bottom: 2px; }
+b { color: #0f3b2a; }
+.two { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.box { background: #f2f8f4; border: 1px solid #d3e7db; border-radius: 4px; padding: 6px 8px; }
+table { width: 100%; border-collapse: collapse; font-size: 8pt; margin: 3px 0 5px; }
+th, td { border: 1px solid #d3e2da; padding: 2.5px 5px; text-align: left; vertical-align: top; }
+th { background: #e4f1ea; color: #0f3b2a; }
+.pipe { display: flex; align-items: stretch; gap: 0; margin: 4px 0 6px; }
+.st { flex: 1; background: #fff; border: 1.3px solid #1b7a52; border-radius: 4px; padding: 4px 5px; font-size: 7.6pt; line-height: 1.3; }
+.st b { display: block; font-size: 8pt; color: #0f4d34; margin-bottom: 1px; }
+.ar { width: 12px; display: flex; align-items: center; justify-content: center; color: #1b7a52; font-weight: 700; }
+.layer { display: grid; grid-template-columns: 92px 1fr; gap: 0; margin-bottom: 3px; }
+.layer .k { background: #1b7a52; color: #fff; font-weight: 600; font-size: 7.6pt; padding: 3px 5px; border-radius: 3px 0 0 3px; }
+.layer .v { border: 1px solid #cfe3d8; border-left: 0; padding: 3px 6px; font-size: 7.8pt; border-radius: 0 3px 3px 0; }
+.small { font-size: 7.6pt; color: #4b5d55; }
+.pb { break-before: page; }
+
+.ok{color:#0f6b43;font-weight:600} .warn{color:#9a5b00;font-weight:600}
+</style></head><body>
+<h1>Green Ghar Score: M2 Mid-submission</h1>
+<div class="sub">Team Spades · Megathon 2026 · Status at 3:00 AM, 11 October · all figures below come from files in the repository (reports/, tests/)</div>
+<div class="bar"></div>
+
+<h2><span>1</span>Current approach and changes since M1</h2>
+<p>The approach is unchanged in shape: <b>score = fixed-weight sum of seven explainable sub-scores</b> (energy efficiency 25%, consumption intensity 20%, envelope 15%, cooling system 15%, windows and shading 10%, renewables 10%, smart use 5%), bands 80/65/50/30. Estimates come from a <b>physics model × LightGBM residual</b>, retrofits are applied <b>sequentially</b> so savings never double count, a <b>LambdaRank ranker</b> orders them, and a <b>hedonic value model with conformal intervals</b> prices the uplift. An LLM only narrates numbers the engine returns, and a verifier checks every figure. What M1 described as a plan is now built and running end to end:</p>
+<table><tr><th style="width:23%">Area</th><th style="width:30%">At M1 (plan)</th><th>Now (built)</th></tr>
+<tr><td><b>Data</b></td><td>Synthetic homes only</td><td>50,000 synthetic homes (seed 42, 7 linked tables) <b>plus real public data in Supabase</b>: 80,811 rows from 9 sources (Census 2011 districts, NFHS-5 states, Open-Meteo weather, World Bank). Calibration views expose gaps, e.g. synthetic homes cook on clean fuel 100% of the time vs 71–99% in real urban NFHS-5 data.</td></tr>
+<tr><td><b>Backend</b></td><td>FastAPI engine, local files</td><td>41 API paths. Supabase project (Postgres 17, 19 migrations, RLS, private bills bucket); the engine also exists as a SQL port with parity tests. Supabase JWT auth, owner-only access, rate limits, request logging.</td></tr>
+<tr><td><b>AI Saathi</b></td><td>LLM with tools</td><td>Router → engine tools → <b>NVIDIA Nemotron 3.5 Lightning</b> (thinking on, streamed) → Groq → template fallback. New project-specific prompt, three few-shot examples and a 1,500-example SFT set, all built from the training split of our data. Hindi, Hinglish and English.</td></tr>
+<tr><td><b>Frontend</b></td><td>Spec only</td><td>React 18 + TypeScript app served by the API at /app: Dashboard, Bill to score, Retrofit studio, Paisa (value and finance), AI Saathi, Garmi (heatwave) mode and a lender portfolio. Username and password sign-in and sign-up.</td></tr>
+<tr><td><b>Channels</b></td><td>Bill OCR, Telegram</td><td>Bill reading for photos, text PDFs and scanned PDFs (Gemini, Tesseract fallback), masked consumer number, Telegram bot with signed deep links and polling mode.</td></tr></table>
+<p class="small"><b>Decisions changed since M1:</b> (1) we calibrate against real public data instead of trusting the generator; (2) the LLM provider moved from Llama 3.3 to Nemotron, and because hosted models cannot be fine-tuned through the API we adapt it with prompt, few-shot and an SFT dataset instead; (3) login moved from email code to username and password.</p>
+
+<h2><span>2</span>Experiments run so far and their results</h2>
+<p class="small">Split: by home, 70/15/15, seed 42. Model selection on validation only; numbers below are the held-out <b>test</b> set.</p>
+<table><tr><th style="width:22%">Experiment</th><th>Compared</th><th style="width:36%">Result (test)</th></tr>
+<tr><td><b>E1 Annual electricity</b> (4,041 homes)</td><td>Zone-median baseline, physics only, LightGBM only, physics × LightGBM</td><td>MAE 944 → 502 → 390 → <b>384 kWh</b>; MAPE 26.0% → <b>9.7%</b>; R² 0.935. <span class="ok">59% lower error than baseline.</span></td></tr>
+<tr><td><b>E2 Retrofit ranking</b> (4,000 homes, 37,170 pairs)</td><td>Popularity, rules (physics ROI), LambdaRank</td><td>NDCG@5 0.881 → 0.976 → <b>0.986</b>; Precision@3 0.720 → 0.904 → <b>0.942</b>. Infeasible items recommended: <b>0</b>.</td></tr>
+<tr><td><b>E3 Savings accuracy</b></td><td>Physics only vs hybrid scaled to metered use</td><td>Electricity MAE 36.1 → <b>23.1 kWh</b>; direction of change correct in <b>100%</b> of cases; induction cooking correctly shown as raising electricity use.</td></tr>
+<tr><td><b>E4 Home value uplift</b> (12,470 sales)</td><td>City median ₹/sq ft, label rule, hedonic LightGBM</td><td>MAPE 11.5% / 29.6% → <b>6.7%</b>. 80% conformal interval covers <b>81.6%</b> at 24.2% width. Implied premium 1.63% per 10 points vs 1.5% assumed in the generator (self-consistency only, not real-world accuracy).</td></tr>
+<tr><td><b>E5 Advisor grounding</b> (180 held-out prompts, 6 categories)</td><td>Template mode; adversarial fake LLM that injects wrong numbers</td><td>Template: groundedness <b>100%</b>, key-fact accuracy <b>98.9%</b>. Adversarial: <b>139 injected hallucinations, 0 reached the user</b>; the verifier forced a safe fallback instead.</td></tr>
+<tr><td><b>E6 Fairness check</b></td><td>Mean score by zone, dwelling type, tenure</td><td>Zones sit within 43.9–46.0 mean score; apartments score lower (40.2) because of roof access, which the advisor explains rather than hides.</td></tr></table>
+<p class="small"><span class="warn">Not yet measured:</span> the live Nemotron groundedness and latency (our build sandbox blocks NVIDIA; the script <code>llm_eval.py --llm</code> is ready), and any accuracy on real customer bills (real data is used for calibration, not for training labels).</p>
+
+<h2><span>3</span>Progress on testing</h2>
+<table><tr><th style="width:26%">Layer</th><th style="width:14%">Result</th><th>What it covers</th></tr>
+<tr><td>Backend (pytest)</td><td class="ok">95 passed</td><td>No train/test leakage across homes; <b>monotonicity</b> (better equipment never lowers the score); fixed weights and tariff slabs; hidden scenarios (flats, tenants, missing data); SQL engine parity with Python; auth, ownership and rate limits; bill OCR including text and scanned PDFs; sign-up rules; verifier and advisor; Nemotron request and stream handling with mocked responses.</td></tr>
+<tr><td>Frontend units (Vitest)</td><td class="ok">23 passed</td><td>API client (errors, retries, token refresh), figure formatting, login and sign-up validation, Garmi mode with real-weather payloads.</td></tr>
+<tr><td>End to end (Playwright)</td><td class="ok">11 passed</td><td>Real browser against the real backend: score, what-if studio, finance, bill upload, chat with verified numbers, mobile navigation without horizontal overflow.</td></tr>
+<tr><td>API contract</td><td class="ok">23 / 23</td><td>Every field the UI reads exists in the live API response.</td></tr>
+<tr><td>Static checks</td><td class="ok">clean</td><td>TypeScript strict, ESLint with zero warnings, Ruff.</td></tr></table>
+<p><b>Honest gaps.</b> Four things were tested only against mocked responses because the build environment blocks those hosts: live Supabase sign-up, the live Nemotron call, the Telegram bot, and Gemini bill reading. A small Supabase step (<code>007_move_rls_helpers</code>) is still waiting to be run in the SQL editor. Data is synthetic plus public aggregates, so scores are estimates, and the interface says so.</p>
+
+<h2><span>4</span>Plan for the remaining time</h2>
+<table><tr><th style="width:18%">When</th><th>Work</th><th style="width:30%">Done when</th></tr>
+<tr><td><b>Next 2 hours</b></td><td>Run <code>connect_supabase</code> on the laptop; verify live sign-up and sign-in; run <code>llm_eval.py --llm</code> against Nemotron and record groundedness and latency; check the Telegram bot and a real PDF bill.</td><td>All four live paths pass, numbers added to the Model Lab.</td></tr>
+<tr><td><b>Before demo</b></td><td>Apply migration 007; tune thinking budget for faster replies; rehearse the 5-screen story (bill → score → what-if → finance → Saathi) on a phone and laptop.</td><td>Median chat reply fast enough for a live demo; no console errors.</td></tr>
+<tr><td><b>Stretch</b></td><td>Distil verified Nemotron answers into the SFT set (<code>--distill</code>) and fine-tune with NeMo Customizer; validate the model on a handful of real bills; add a lender view with real-data calibration bands.</td><td>Held-out groundedness at least as high as the template baseline with richer language.</td></tr></table>
+<p class="small"><b>Main risks:</b> live reasoning latency (mitigation: thinking budget setting and template fallback); free-tier Supabase pausing after 7 days idle (restore from dashboard); synthetic data optimism (mitigation: real-data calibration views and honest confidence labels).</p>
+</body></html>

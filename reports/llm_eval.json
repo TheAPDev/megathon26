@@ -1,0 +1,89 @@
+{
+  "categories": [
+    "explain_score",
+    "explain_recommendation",
+    "what_if",
+    "infeasible",
+    "missing_data",
+    "conflicting_data"
+  ],
+  "prompts_per_category": 30,
+  "home_split": "held-out test homes (home_id grouped)",
+  "template_only": {
+    "mode": "template_only",
+    "n_prompts": 180,
+    "groundedness": 1.0,
+    "unsupported_claim_rate": 0.0,
+    "factual_accuracy": 0.9889,
+    "fallback_rate": 0.0,
+    "median_latency_s": 0.001,
+    "by_category": {
+      "conflicting_data": {
+        "groundedness": 1.0,
+        "accuracy": 0.9333
+      },
+      "explain_recommendation": {
+        "groundedness": 1.0,
+        "accuracy": 1.0
+      },
+      "explain_score": {
+        "groundedness": 1.0,
+        "accuracy": 1.0
+      },
+      "infeasible": {
+        "groundedness": 1.0,
+        "accuracy": 1.0
+      },
+      "missing_data": {
+        "groundedness": 1.0,
+        "accuracy": 1.0
+      },
+      "what_if": {
+        "groundedness": 1.0,
+        "accuracy": 1.0
+      }
+    }
+  },
+  "adversarial_verifier": {
+    "mode": "adversarial_fake_llm",
+    "n_prompts": 180,
+    "groundedness": 1.0,
+    "unsupported_claim_rate": 0.0,
+    "factual_accuracy": 0.9778,
+    "fallback_rate": 0.9833,
+    "median_latency_s": 0.001,
+    "by_category": {
+      "conflicting_data": {
+        "groundedness": 1.0,
+        "accuracy": 0.9333
+      },
+      "explain_recommendation": {
+        "groundedness": 1.0,
+        "accuracy": 1.0
+      },
+      "explain_score": {
+        "groundedness": 1.0,
+        "accuracy": 1.0
+      },
+      "infeasible": {
+        "groundedness": 1.0,
+        "accuracy": 1.0
+      },
+      "missing_data": {
+        "groundedness": 1.0,
+        "accuracy": 0.9333
+      },
+      "what_if": {
+        "groundedness": 1.0,
+        "accuracy": 1.0
+      }
+    },
+    "fake_replies": 357,
+    "injected_hallucinations": 139,
+    "hallucinations_reaching_user": 0,
+    "note": "Every injected figure must be blocked: user-facing groundedness should stay 1.0 while the fallback rate shows how often the verifier had to step in."
+  },
+  "llm": {
+    "skipped": "run with --llm and NVIDIA_API_KEY or GROQ_API_KEY to evaluate the live model"
+  }
+}

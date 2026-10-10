@@ -1,0 +1,62 @@
+{
+  "features": [
+    "retrofit_id",
+    "suit_ord",
+    "order_rank",
+    "cost_mid",
+    "pred_inr",
+    "pred_kwh_hybrid",
+    "pred_lpg",
+    "pred_roi",
+    "zone",
+    "dwelling_type",
+    "n_ac",
+    "income_band",
+    "wfh",
+    "building_age_years",
+    "tenure",
+    "occupants"
+  ],
+  "categories": {
+    "retrofit_id": [
+      "ac_5star_inverter",
+      "ac_setpoint",
+      "bldc_fans",
+      "cool_roof",
+      "external_shading",
+      "fridge_5star",
+      "heat_pump_geyser",
+      "induction_cooking",
+      "led_lighting",
+      "lithium_battery",
+      "roof_insulation",
+      "rooftop_solar",
+      "smart_plug_tod",
+      "solar_film",
+      "solar_water_heater"
+    ],
+    "zone": [
+      "cold",
+      "composite",
+      "hot_dry",
+      "temperate",
+      "warm_humid"
+    ],
+    "dwelling_type": [
+      "apartment",
+      "independent_house",
+      "row_house"
+    ],
+    "income_band": [
+      "high",
+      "low",
+      "middle",
+      "upper_middle"
+    ],
+    "tenure": [
+      "owner",
+      "tenant"
+    ]
+  },
+  "version": "7cbf0e02d759"
+}

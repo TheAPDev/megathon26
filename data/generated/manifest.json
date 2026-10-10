@@ -1,0 +1,15 @@
+{
+  "seed": 42,
+  "n_homes": 50000,
+  "tables": {
+    "homes": 50000,
+    "customers": 50000,
+    "retrofit_events": 11310,
+    "sales": 12470,
+    "memory": 7766,
+    "truth": 50000,
+    "home_scores": 50000
+  },
+  "generator": "greenghar.synth.generator",
+  "built_at": "2026-10-10T20:50:52.161530+05:30"
+}

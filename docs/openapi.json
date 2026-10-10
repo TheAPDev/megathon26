@@ -1,0 +1,3338 @@
+{
+ "openapi": "3.1.0",
+ "info": {
+  "title": "Green Ghar Score API",
+  "description": "India home-energy score, retrofit plan, what-if, finance, grounded advisor, lender portfolio and model lab.",
+  "version": "1.0.0"
+ },
+ "paths": {
+  "/health": {
+   "get": {
+    "tags": [
+     "ops"
+    ],
+    "summary": "Health",
+    "operationId": "health_health_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "type": "object",
+         "title": "Response Health Health Get"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/homes": {
+   "get": {
+    "tags": [
+     "homes"
+    ],
+    "summary": "Homes linked to the signed-in customer (empty when anonymous)",
+    "operationId": "list_my_homes_homes_get",
+    "parameters": [
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Authorization"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "array",
+         "items": {
+          "type": "object",
+          "additionalProperties": true
+         },
+         "title": "Response List My Homes Homes Get"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   },
+   "post": {
+    "tags": [
+     "homes"
+    ],
+    "summary": "Create a home from a survey or parsed bill",
+    "operationId": "create_home_homes_post",
+    "parameters": [
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Authorization"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/HomeCreate"
+       }
+      }
+     }
+    },
+    "responses": {
+     "201": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "object",
+         "additionalProperties": true,
+         "title": "Response Create Home Homes Post"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/homes/{home_id}": {
+   "get": {
+    "tags": [
+     "homes"
+    ],
+    "summary": "Home attributes as the engine sees them",
+    "operationId": "get_home_homes__home_id__get",
+    "parameters": [
+     {
+      "name": "home_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "title": "Home Id"
+      }
+     },
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Authorization"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "object",
+         "additionalProperties": true,
+         "title": "Response Get Home Homes  Home Id  Get"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/homes/{home_id}/score": {
+   "get": {
+    "tags": [
+     "homes"
+    ],
+    "summary": "Screen 1: Green Ghar Score with waterfall and confidence",
+    "operationId": "get_score_homes__home_id__score_get",
+    "parameters": [
+     {
+      "name": "home_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "title": "Home Id"
+      }
+     },
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Authorization"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ScoreResult"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/homes/{home_id}/plan": {
+   "get": {
+    "tags": [
+     "homes"
+    ],
+    "summary": "Screen 2: retrofit plan in interaction order (memory-aware)",
+    "operationId": "get_plan_homes__home_id__plan_get",
+    "parameters": [
+     {
+      "name": "home_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "title": "Home Id"
+      }
+     },
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Authorization"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "object",
+         "additionalProperties": true,
+         "title": "Response Get Plan Homes  Home Id  Plan Get"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/homes/{home_id}/scenario": {
+   "post": {
+    "tags": [
+     "homes"
+    ],
+    "summary": "Screen 3: what-if; reruns the engine (target < 300 ms)",
+    "operationId": "post_scenario_homes__home_id__scenario_post",
+    "parameters": [
+     {
+      "name": "home_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "title": "Home Id"
+      }
+     },
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Authorization"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/ScenarioRequest"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "object",
+         "additionalProperties": true,
+         "title": "Response Post Scenario Homes  Home Id  Scenario Post"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/homes/{home_id}/value": {
+   "get": {
+    "tags": [
+     "homes"
+    ],
+    "summary": "Screen 4: current value and post-retrofit uplift range (indicative)",
+    "operationId": "get_value_homes__home_id__value_get",
+    "parameters": [
+     {
+      "name": "home_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "title": "Home Id"
+      }
+     },
+     {
+      "name": "retrofits",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       },
+       "default": [],
+       "title": "Retrofits"
+      }
+     },
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Authorization"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "object",
+         "additionalProperties": true,
+         "title": "Response Get Value Homes  Home Id  Value Get"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/homes/{home_id}/finance": {
+   "post": {
+    "tags": [
+     "homes"
+    ],
+    "summary": "Screen 4: subsidy, EMI vs bill saving, payback, 25-year savings",
+    "operationId": "post_finance_homes__home_id__finance_post",
+    "parameters": [
+     {
+      "name": "home_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "title": "Home Id"
+      }
+     },
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Authorization"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/FinanceRequest"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "object",
+         "additionalProperties": true,
+         "title": "Response Post Finance Homes  Home Id  Finance Post"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/homes/{home_id}/solar": {
+   "get": {
+    "tags": [
+     "homes"
+    ],
+    "summary": "Rooftop solar size, quote and PM Surya Ghar navigator",
+    "operationId": "get_solar_homes__home_id__solar_get",
+    "parameters": [
+     {
+      "name": "home_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "title": "Home Id"
+      }
+     },
+     {
+      "name": "kw",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "number",
+         "maximum": 10,
+         "exclusiveMinimum": 0
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Kw"
+      }
+     },
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Authorization"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "object",
+         "additionalProperties": true,
+         "title": "Response Get Solar Homes  Home Id  Solar Get"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/homes/{home_id}/subsidy-application": {
+   "get": {
+    "tags": [
+     "homes"
+    ],
+    "summary": "Pre-filled PM Surya Ghar application draft",
+    "operationId": "subsidy_application_homes__home_id__subsidy_application_get",
+    "parameters": [
+     {
+      "name": "home_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "title": "Home Id"
+      }
+     },
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Authorization"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "object",
+         "additionalProperties": true,
+         "title": "Response Subsidy Application Homes  Home Id  Subsidy Application Get"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/homes/{home_id}/roadmap": {
+   "get": {
+    "tags": [
+     "homes"
+    ],
+    "summary": "Budget-constrained year-by-year plan",
+    "operationId": "get_roadmap_homes__home_id__roadmap_get",
+    "parameters": [
+     {
+      "name": "home_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "title": "Home Id"
+      }
+     },
+     {
+      "name": "budget_inr",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "type": "number",
+       "minimum": 1000,
+       "title": "Budget Inr"
+      }
+     },
+     {
+      "name": "years",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "integer",
+       "maximum": 5,
+       "minimum": 1,
+       "default": 3,
+       "title": "Years"
+      }
+     },
+     {
+      "name": "objective",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "enum": [
+        "inr",
+        "co2",
+        "kwh"
+       ],
+       "type": "string",
+       "default": "inr",
+       "title": "Objective"
+      }
+     },
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Authorization"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "object",
+         "additionalProperties": true,
+         "title": "Response Get Roadmap Homes  Home Id  Roadmap Get"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/homes/{home_id}/weather-signature": {
+   "get": {
+    "tags": [
+     "homes"
+    ],
+    "summary": "Real-weather check: kWh per real cooling degree-day and weather-normalised use",
+    "operationId": "get_weather_signature_homes__home_id__weather_signature_get",
+    "parameters": [
+     {
+      "name": "home_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "title": "Home Id"
+      }
+     },
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Authorization"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "object",
+         "additionalProperties": true,
+         "title": "Response Get Weather Signature Homes  Home Id  Weather Signature Get"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/homes/{home_id}/heatwave": {
+   "get": {
+    "tags": [
+     "homes"
+    ],
+    "summary": "Heatwave mode: indoor temperature drop and AC hours avoided",
+    "operationId": "get_heatwave_homes__home_id__heatwave_get",
+    "parameters": [
+     {
+      "name": "home_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "title": "Home Id"
+      }
+     },
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Authorization"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "object",
+         "additionalProperties": true,
+         "title": "Response Get Heatwave Homes  Home Id  Heatwave Get"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/homes/{home_id}/telegram-link": {
+   "post": {
+    "tags": [
+     "homes"
+    ],
+    "summary": "Signed 15-minute deep link that connects a Telegram chat to this home",
+    "operationId": "telegram_link_homes__home_id__telegram_link_post",
+    "parameters": [
+     {
+      "name": "home_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "title": "Home Id"
+      }
+     },
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Authorization"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "object",
+         "additionalProperties": true,
+         "title": "Response Telegram Link Homes  Home Id  Telegram Link Post"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/homes/{home_id}/journey": {
+   "get": {
+    "tags": [
+     "homes"
+    ],
+    "summary": "Screen 6: completed retrofits, memory and current advice",
+    "operationId": "get_journey_homes__home_id__journey_get",
+    "parameters": [
+     {
+      "name": "home_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "title": "Home Id"
+      }
+     },
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Authorization"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "object",
+         "additionalProperties": true,
+         "title": "Response Get Journey Homes  Home Id  Journey Get"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/homes/{home_id}/memory": {
+   "post": {
+    "tags": [
+     "homes"
+    ],
+    "summary": "Add a memory item and see what changed",
+    "operationId": "post_memory_homes__home_id__memory_post",
+    "parameters": [
+     {
+      "name": "home_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "title": "Home Id"
+      }
+     },
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Authorization"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/MemoryIn"
+       }
+      }
+     }
+    },
+    "responses": {
+     "201": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "object",
+         "additionalProperties": true,
+         "title": "Response Post Memory Homes  Home Id  Memory Post"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/advisor/chat": {
+   "post": {
+    "tags": [
+     "advisor"
+    ],
+    "summary": "Screen 5: grounded AI advisor (every figure verified)",
+    "operationId": "chat_advisor_chat_post",
+    "parameters": [
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Authorization"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/ChatIn"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "object",
+         "additionalProperties": true,
+         "title": "Response Chat Advisor Chat Post"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/bills/parse": {
+   "post": {
+    "tags": [
+     "channels"
+    ],
+    "summary": "Bill photo -> monthly units (Gemini Flash, Tesseract fallback)",
+    "operationId": "parse_bill_ep_bills_parse_post",
+    "parameters": [
+     {
+      "name": "home_id",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "description": "Link and store the bill against this home",
+       "title": "Home Id"
+      },
+      "description": "Link and store the bill against this home"
+     },
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Authorization"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "multipart/form-data": {
+       "schema": {
+        "$ref": "#/components/schemas/Body_parse_bill_ep_bills_parse_post"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "object",
+         "additionalProperties": true,
+         "title": "Response Parse Bill Ep Bills Parse Post"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/speech/transcribe": {
+   "post": {
+    "tags": [
+     "channels"
+    ],
+    "summary": "Voice note -> text (Whisper on Groq, NVIDIA fallback)",
+    "operationId": "transcribe_ep_speech_transcribe_post",
+    "parameters": [
+     {
+      "name": "language",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Language"
+      }
+     },
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Authorization"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "multipart/form-data": {
+       "schema": {
+        "$ref": "#/components/schemas/Body_transcribe_ep_speech_transcribe_post"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "object",
+         "additionalProperties": true,
+         "title": "Response Transcribe Ep Speech Transcribe Post"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/speech/tts": {
+   "post": {
+    "tags": [
+     "channels"
+    ],
+    "summary": "Text -> speech (NVIDIA Magpie TTS, edge-tts fallback)",
+    "operationId": "tts_ep_speech_tts_post",
+    "parameters": [
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Authorization"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/TTSIn"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/telegram/webhook": {
+   "post": {
+    "tags": [
+     "channels"
+    ],
+    "summary": "Telegram Bot API webhook",
+    "operationId": "telegram_webhook_telegram_webhook_post",
+    "parameters": [
+     {
+      "name": "x-telegram-bot-api-secret-token",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "X-Telegram-Bot-Api-Secret-Token"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "object",
+         "additionalProperties": true,
+         "title": "Response Telegram Webhook Telegram Webhook Post"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/portfolio/summary": {
+   "get": {
+    "tags": [
+     "portfolio"
+    ],
+    "summary": "P Summary",
+    "operationId": "p_summary_portfolio_summary_get",
+    "parameters": [
+     {
+      "name": "city",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "City"
+      }
+     },
+     {
+      "name": "state",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "State"
+      }
+     },
+     {
+      "name": "x-api-key",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "X-Api-Key"
+      }
+     },
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Authorization"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "object",
+         "additionalProperties": true,
+         "title": "Response P Summary Portfolio Summary Get"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/portfolio/poor-homes": {
+   "get": {
+    "tags": [
+     "portfolio"
+    ],
+    "summary": "P Poor",
+    "operationId": "p_poor_portfolio_poor_homes_get",
+    "parameters": [
+     {
+      "name": "limit",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "integer",
+       "maximum": 500,
+       "default": 50,
+       "title": "Limit"
+      }
+     },
+     {
+      "name": "city",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "City"
+      }
+     },
+     {
+      "name": "state",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "State"
+      }
+     },
+     {
+      "name": "x-api-key",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "X-Api-Key"
+      }
+     },
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Authorization"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "array",
+         "items": {
+          "type": "object",
+          "additionalProperties": true
+         },
+         "title": "Response P Poor Portfolio Poor Homes Get"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/portfolio/ranking": {
+   "get": {
+    "tags": [
+     "portfolio"
+    ],
+    "summary": "Homes ranked by improvement potential",
+    "operationId": "p_rank_portfolio_ranking_get",
+    "parameters": [
+     {
+      "name": "limit",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "integer",
+       "maximum": 500,
+       "default": 50,
+       "title": "Limit"
+      }
+     },
+     {
+      "name": "city",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "City"
+      }
+     },
+     {
+      "name": "state",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "State"
+      }
+     },
+     {
+      "name": "x-api-key",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "X-Api-Key"
+      }
+     },
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Authorization"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "array",
+         "items": {
+          "type": "object",
+          "additionalProperties": true
+         },
+         "title": "Response P Rank Portfolio Ranking Get"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/portfolio/map": {
+   "get": {
+    "tags": [
+     "portfolio"
+    ],
+    "summary": "P Map",
+    "operationId": "p_map_portfolio_map_get",
+    "parameters": [
+     {
+      "name": "x-api-key",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "X-Api-Key"
+      }
+     },
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Authorization"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "array",
+         "items": {
+          "type": "object",
+          "additionalProperties": true
+         },
+         "title": "Response P Map Portfolio Map Get"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/portfolio/targets": {
+   "get": {
+    "tags": [
+     "portfolio"
+    ],
+    "summary": "Green-finance targeting list (consented customers only)",
+    "operationId": "p_targets_portfolio_targets_get",
+    "parameters": [
+     {
+      "name": "limit",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "integer",
+       "maximum": 1000,
+       "default": 100,
+       "title": "Limit"
+      }
+     },
+     {
+      "name": "city",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "City"
+      }
+     },
+     {
+      "name": "x-api-key",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "X-Api-Key"
+      }
+     },
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Authorization"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "array",
+         "items": {
+          "type": "object",
+          "additionalProperties": true
+         },
+         "title": "Response P Targets Portfolio Targets Get"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/portfolio/rwa-leads": {
+   "get": {
+    "tags": [
+     "portfolio"
+    ],
+    "summary": "Housing societies for pooled common-area solar",
+    "operationId": "p_rwa_portfolio_rwa_leads_get",
+    "parameters": [
+     {
+      "name": "min_homes",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "integer",
+       "minimum": 2,
+       "default": 4,
+       "title": "Min Homes"
+      }
+     },
+     {
+      "name": "limit",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "integer",
+       "maximum": 500,
+       "default": 50,
+       "title": "Limit"
+      }
+     },
+     {
+      "name": "x-api-key",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "X-Api-Key"
+      }
+     },
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Authorization"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "array",
+         "items": {
+          "type": "object",
+          "additionalProperties": true
+         },
+         "title": "Response P Rwa Portfolio Rwa Leads Get"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/portfolio/rescore": {
+   "post": {
+    "tags": [
+     "portfolio"
+    ],
+    "summary": "Recompute cached scores (batch job trigger)",
+    "operationId": "p_rescore_portfolio_rescore_post",
+    "parameters": [
+     {
+      "name": "x-api-key",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "X-Api-Key"
+      }
+     },
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Authorization"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "object",
+         "additionalProperties": true,
+         "title": "Response P Rescore Portfolio Rescore Post"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/lab/metrics": {
+   "get": {
+    "tags": [
+     "model lab"
+    ],
+    "summary": "Held-out metrics vs baselines",
+    "operationId": "lab_metrics_lab_metrics_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "type": "object",
+         "title": "Response Lab Metrics Lab Metrics Get"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/lab/scenarios": {
+   "get": {
+    "tags": [
+     "model lab"
+    ],
+    "summary": "Run the hidden-scenario suite, monotonicity and worked-example checks live",
+    "operationId": "lab_scenarios_lab_scenarios_get",
+    "parameters": [
+     {
+      "name": "monotonicity_homes",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "integer",
+       "maximum": 1000,
+       "minimum": 10,
+       "default": 60,
+       "title": "Monotonicity Homes"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "object",
+         "additionalProperties": true,
+         "title": "Response Lab Scenarios Lab Scenarios Get"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/lab/factors": {
+   "get": {
+    "tags": [
+     "model lab"
+    ],
+    "summary": "Lab Factors",
+    "operationId": "lab_factors_lab_factors_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "items": {
+          "additionalProperties": true,
+          "type": "object"
+         },
+         "type": "array",
+         "title": "Response Lab Factors Lab Factors Get"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/lab/data-card": {
+   "get": {
+    "tags": [
+     "model lab"
+    ],
+    "summary": "Lab Data Card",
+    "operationId": "lab_data_card_lab_data_card_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "type": "object",
+         "title": "Response Lab Data Card Lab Data Card Get"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/reference/cities": {
+   "get": {
+    "tags": [
+     "reference"
+    ],
+    "summary": "Ref Cities",
+    "operationId": "ref_cities_reference_cities_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "items": {
+          "additionalProperties": true,
+          "type": "object"
+         },
+         "type": "array",
+         "title": "Response Ref Cities Reference Cities Get"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/reference/retrofits": {
+   "get": {
+    "tags": [
+     "reference"
+    ],
+    "summary": "Ref Retrofits",
+    "operationId": "ref_retrofits_reference_retrofits_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "items": {
+          "additionalProperties": true,
+          "type": "object"
+         },
+         "type": "array",
+         "title": "Response Ref Retrofits Reference Retrofits Get"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/reference/tariffs/{state}": {
+   "get": {
+    "tags": [
+     "reference"
+    ],
+    "summary": "Ref Tariff",
+    "operationId": "ref_tariff_reference_tariffs__state__get",
+    "parameters": [
+     {
+      "name": "state",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "title": "State"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "object",
+         "additionalProperties": true,
+         "title": "Response Ref Tariff Reference Tariffs  State  Get"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/reference/real/sources": {
+   "get": {
+    "tags": [
+     "reference"
+    ],
+    "summary": "Real public datasets loaded (Census 2011, NFHS-5, OWID, WRI, Open-Meteo, NASA POWER, World Bank)",
+    "operationId": "real_sources_reference_real_sources_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "items": {
+          "additionalProperties": true,
+          "type": "object"
+         },
+         "type": "array",
+         "title": "Response Real Sources Reference Real Sources Get"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/reference/real/state/{state}": {
+   "get": {
+    "tags": [
+     "reference"
+    ],
+    "summary": "Real state profile: Census 2011 housing and assets, NFHS-5 energy access, power fleet",
+    "operationId": "real_state_reference_real_state__state__get",
+    "parameters": [
+     {
+      "name": "state",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "title": "State"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "object",
+         "additionalProperties": true,
+         "title": "Response Real State Reference Real State  State  Get"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/reference/real/city/{city}": {
+   "get": {
+    "tags": [
+     "reference"
+    ],
+    "summary": "Real weather 2024-26 (Open-Meteo/ERA5) and NASA POWER climatology for a city",
+    "operationId": "real_city_reference_real_city__city__get",
+    "parameters": [
+     {
+      "name": "city",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "title": "City"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "object",
+         "additionalProperties": true,
+         "title": "Response Real City Reference Real City  City  Get"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/reference/real/calibration": {
+   "get": {
+    "tags": [
+     "reference"
+    ],
+    "summary": "Synthetic population vs real statistics, per state",
+    "operationId": "real_calibration_reference_real_calibration_get",
+    "parameters": [
+     {
+      "name": "x-api-key",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "X-Api-Key"
+      }
+     },
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Authorization"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "array",
+         "items": {
+          "type": "object",
+          "additionalProperties": true
+         },
+         "title": "Response Real Calibration Reference Real Calibration Get"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/auth/signup": {
+   "post": {
+    "tags": [
+     "auth"
+    ],
+    "summary": "Create a username + password account",
+    "operationId": "signup_auth_signup_post",
+    "parameters": [
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Authorization"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/SignupIn"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "object",
+         "additionalProperties": true,
+         "title": "Response Signup Auth Signup Post"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/config": {
+   "get": {
+    "tags": [
+     "ops"
+    ],
+    "summary": "Public client configuration (no secrets)",
+    "operationId": "public_config_config_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "additionalProperties": true,
+         "type": "object",
+         "title": "Response Public Config Config Get"
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+ },
+ "components": {
+  "schemas": {
+   "Body_parse_bill_ep_bills_parse_post": {
+    "properties": {
+     "file": {
+      "type": "string",
+      "contentMediaType": "application/octet-stream",
+      "title": "File"
+     }
+    },
+    "type": "object",
+    "required": [
+     "file"
+    ],
+    "title": "Body_parse_bill_ep_bills_parse_post"
+   },
+   "Body_transcribe_ep_speech_transcribe_post": {
+    "properties": {
+     "file": {
+      "type": "string",
+      "contentMediaType": "application/octet-stream",
+      "title": "File"
+     }
+    },
+    "type": "object",
+    "required": [
+     "file"
+    ],
+    "title": "Body_transcribe_ep_speech_transcribe_post"
+   },
+   "ChatIn": {
+    "properties": {
+     "home_id": {
+      "type": "string",
+      "title": "Home Id"
+     },
+     "message": {
+      "type": "string",
+      "maxLength": 2000,
+      "minLength": 1,
+      "title": "Message"
+     },
+     "language": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Language",
+      "examples": [
+       "hi",
+       "en",
+       "ta"
+      ]
+     },
+     "use_llm": {
+      "type": "boolean",
+      "title": "Use Llm",
+      "default": true
+     }
+    },
+    "type": "object",
+    "required": [
+     "home_id",
+     "message"
+    ],
+    "title": "ChatIn"
+   },
+   "FinanceRequest": {
+    "properties": {
+     "retrofits": {
+      "items": {
+       "type": "string"
+      },
+      "type": "array",
+      "title": "Retrofits"
+     },
+     "params": {
+      "additionalProperties": {
+       "type": "number"
+      },
+      "type": "object",
+      "title": "Params"
+     },
+     "down_payment_inr": {
+      "type": "number",
+      "minimum": 0.0,
+      "title": "Down Payment Inr",
+      "default": 0
+     }
+    },
+    "type": "object",
+    "required": [
+     "retrofits"
+    ],
+    "title": "FinanceRequest"
+   },
+   "HTTPValidationError": {
+    "properties": {
+     "detail": {
+      "items": {
+       "$ref": "#/components/schemas/ValidationError"
+      },
+      "type": "array",
+      "title": "Detail"
+     }
+    },
+    "type": "object",
+    "title": "HTTPValidationError"
+   },
+   "HomeCreate": {
+    "properties": {
+     "home_id": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Home Id"
+     },
+     "city": {
+      "type": "string",
+      "title": "City"
+     },
+     "dwelling_type": {
+      "type": "string",
+      "enum": [
+       "apartment",
+       "independent_house",
+       "row_house"
+      ],
+      "title": "Dwelling Type",
+      "default": "apartment"
+     },
+     "floor_position": {
+      "type": "string",
+      "enum": [
+       "ground",
+       "middle",
+       "top"
+      ],
+      "title": "Floor Position",
+      "default": "middle"
+     },
+     "tenure": {
+      "type": "string",
+      "enum": [
+       "owner",
+       "tenant"
+      ],
+      "title": "Tenure",
+      "default": "owner"
+     },
+     "carpet_area_m2": {
+      "anyOf": [
+       {
+        "type": "number",
+        "exclusiveMaximum": 2000.0,
+        "exclusiveMinimum": 10.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Carpet Area M2"
+     },
+     "occupants": {
+      "type": "integer",
+      "maximum": 15.0,
+      "minimum": 1.0,
+      "title": "Occupants",
+      "default": 4
+     },
+     "building_age_years": {
+      "anyOf": [
+       {
+        "type": "number",
+        "maximum": 120.0,
+        "minimum": 0.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Building Age Years"
+     },
+     "roof_area_m2": {
+      "anyOf": [
+       {
+        "type": "number",
+        "minimum": 0.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Roof Area M2"
+     },
+     "roof_access": {
+      "type": "boolean",
+      "title": "Roof Access",
+      "default": false
+     },
+     "wall_type": {
+      "type": "string",
+      "enum": [
+       "solid_brick",
+       "hollow_block",
+       "aac"
+      ],
+      "title": "Wall Type",
+      "default": "solid_brick"
+     },
+     "window_to_wall": {
+      "type": "number",
+      "maximum": 0.9,
+      "minimum": 0.0,
+      "title": "Window To Wall",
+      "default": 0.2
+     },
+     "west_glass": {
+      "type": "boolean",
+      "title": "West Glass",
+      "default": false
+     },
+     "shading": {
+      "type": "string",
+      "enum": [
+       "none",
+       "partial",
+       "full"
+      ],
+      "title": "Shading",
+      "default": "none"
+     },
+     "cool_roof": {
+      "type": "boolean",
+      "title": "Cool Roof",
+      "default": false
+     },
+     "roof_insulation": {
+      "type": "boolean",
+      "title": "Roof Insulation",
+      "default": false
+     },
+     "solar_film": {
+      "type": "boolean",
+      "title": "Solar Film",
+      "default": false
+     },
+     "n_ac": {
+      "type": "integer",
+      "maximum": 10.0,
+      "minimum": 0.0,
+      "title": "N Ac",
+      "default": 0
+     },
+     "ac_tech": {
+      "type": "string",
+      "enum": [
+       "fixed",
+       "inverter"
+      ],
+      "title": "Ac Tech",
+      "default": "fixed"
+     },
+     "ac_star": {
+      "type": "integer",
+      "maximum": 5.0,
+      "minimum": 1.0,
+      "title": "Ac Star",
+      "default": 3
+     },
+     "ac_age_years": {
+      "type": "number",
+      "maximum": 30.0,
+      "minimum": 0.0,
+      "title": "Ac Age Years",
+      "default": 5
+     },
+     "ac_tonnage": {
+      "type": "number",
+      "maximum": 3.0,
+      "minimum": 0.75,
+      "title": "Ac Tonnage",
+      "default": 1.5
+     },
+     "ac_setpoint_c": {
+      "type": "number",
+      "maximum": 30.0,
+      "minimum": 16.0,
+      "title": "Ac Setpoint C",
+      "default": 24
+     },
+     "n_coolers": {
+      "type": "integer",
+      "maximum": 6.0,
+      "minimum": 0.0,
+      "title": "N Coolers",
+      "default": 0
+     },
+     "n_fans": {
+      "type": "integer",
+      "maximum": 20.0,
+      "minimum": 0.0,
+      "title": "N Fans",
+      "default": 4
+     },
+     "bldc_fan_share": {
+      "type": "number",
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Bldc Fan Share",
+      "default": 0.0
+     },
+     "fridge_star": {
+      "type": "integer",
+      "maximum": 5.0,
+      "minimum": 1.0,
+      "title": "Fridge Star",
+      "default": 3
+     },
+     "fridge_age_years": {
+      "type": "number",
+      "maximum": 30.0,
+      "minimum": 0.0,
+      "title": "Fridge Age Years",
+      "default": 6
+     },
+     "light_points": {
+      "type": "integer",
+      "maximum": 80.0,
+      "minimum": 0.0,
+      "title": "Light Points",
+      "default": 12
+     },
+     "led_share": {
+      "type": "number",
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Led Share",
+      "default": 0.6
+     },
+     "water_heating": {
+      "type": "string",
+      "enum": [
+       "electric_geyser",
+       "solar",
+       "heat_pump",
+       "gas",
+       "none"
+      ],
+      "title": "Water Heating",
+      "default": "electric_geyser"
+     },
+     "cooking": {
+      "type": "string",
+      "enum": [
+       "lpg",
+       "png",
+       "induction"
+      ],
+      "title": "Cooking",
+      "default": "lpg"
+     },
+     "lpg_cylinders_per_year": {
+      "anyOf": [
+       {
+        "type": "number",
+        "maximum": 40.0,
+        "minimum": 0.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Lpg Cylinders Per Year"
+     },
+     "pv_kw": {
+      "type": "number",
+      "maximum": 50.0,
+      "minimum": 0.0,
+      "title": "Pv Kw",
+      "default": 0
+     },
+     "net_metered": {
+      "type": "boolean",
+      "title": "Net Metered",
+      "default": false
+     },
+     "backup": {
+      "type": "string",
+      "enum": [
+       "none",
+       "lead_acid",
+       "lithium",
+       "dg_set"
+      ],
+      "title": "Backup",
+      "default": "none"
+     },
+     "outage_hours_month": {
+      "type": "number",
+      "maximum": 300.0,
+      "minimum": 0.0,
+      "title": "Outage Hours Month",
+      "default": 4
+     },
+     "smart_meter": {
+      "type": "boolean",
+      "title": "Smart Meter",
+      "default": false
+     },
+     "tod_tariff": {
+      "type": "boolean",
+      "title": "Tod Tariff",
+      "default": false
+     },
+     "smart_plugs": {
+      "type": "boolean",
+      "title": "Smart Plugs",
+      "default": false
+     },
+     "bee_star_label": {
+      "anyOf": [
+       {
+        "type": "integer",
+        "maximum": 5.0,
+        "minimum": 1.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Bee Star Label"
+     },
+     "sanctioned_load_kw": {
+      "type": "number",
+      "maximum": 50.0,
+      "minimum": 0.5,
+      "title": "Sanctioned Load Kw",
+      "default": 3
+     },
+     "income_band": {
+      "type": "string",
+      "enum": [
+       "low",
+       "middle",
+       "upper_middle",
+       "high"
+      ],
+      "title": "Income Band",
+      "default": "middle"
+     },
+     "wfh": {
+      "type": "boolean",
+      "title": "Wfh",
+      "default": false
+     },
+     "data_source": {
+      "type": "string",
+      "enum": [
+       "smart_meter",
+       "bill_ocr",
+       "bbps",
+       "survey"
+      ],
+      "title": "Data Source",
+      "default": "survey"
+     },
+     "monthly_kwh": {
+      "anyOf": [
+       {
+        "items": {
+         "anyOf": [
+          {
+           "type": "number"
+          },
+          {
+           "type": "null"
+          }
+         ]
+        },
+        "type": "array"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Monthly Kwh"
+     },
+     "has_retrofit_history": {
+      "type": "boolean",
+      "title": "Has Retrofit History",
+      "default": false
+     }
+    },
+    "type": "object",
+    "required": [
+     "city"
+    ],
+    "title": "HomeCreate"
+   },
+   "MemoryIn": {
+    "properties": {
+     "kind": {
+      "type": "string",
+      "enum": [
+       "constraint",
+       "preference",
+       "feedback"
+      ],
+      "title": "Kind"
+     },
+     "key": {
+      "type": "string",
+      "title": "Key",
+      "examples": [
+       "budget_inr",
+       "exclude",
+       "tenure",
+       "language",
+       "rejected",
+       "accepted"
+      ]
+     },
+     "value": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "integer"
+       },
+       {
+        "type": "number"
+       },
+       {
+        "type": "boolean"
+       }
+      ],
+      "title": "Value"
+     }
+    },
+    "type": "object",
+    "required": [
+     "kind",
+     "key",
+     "value"
+    ],
+    "title": "MemoryIn"
+   },
+   "ScenarioRequest": {
+    "properties": {
+     "retrofits": {
+      "items": {
+       "type": "string"
+      },
+      "type": "array",
+      "title": "Retrofits"
+     },
+     "params": {
+      "additionalProperties": {
+       "type": "number"
+      },
+      "type": "object",
+      "title": "Params"
+     }
+    },
+    "type": "object",
+    "title": "ScenarioRequest"
+   },
+   "ScoreResult": {
+    "properties": {
+     "home_id": {
+      "type": "string",
+      "title": "Home Id"
+     },
+     "score": {
+      "type": "integer",
+      "title": "Score"
+     },
+     "band": {
+      "type": "string",
+      "title": "Band"
+     },
+     "raw_score": {
+      "type": "number",
+      "title": "Raw Score"
+     },
+     "components": {
+      "items": {
+       "$ref": "#/components/schemas/SubScore"
+      },
+      "type": "array",
+      "title": "Components"
+     },
+     "confidence": {
+      "type": "string",
+      "enum": [
+       "high",
+       "medium",
+       "low"
+      ],
+      "title": "Confidence"
+     },
+     "confidence_reasons": {
+      "items": {
+       "type": "string"
+      },
+      "type": "array",
+      "title": "Confidence Reasons"
+     },
+     "warnings": {
+      "items": {
+       "type": "string"
+      },
+      "type": "array",
+      "title": "Warnings"
+     },
+     "annual_grid_kwh": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Annual Grid Kwh"
+     },
+     "annual_grid_kwh_estimated": {
+      "type": "boolean",
+      "title": "Annual Grid Kwh Estimated"
+     },
+     "intensity_kwh_m2": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Intensity Kwh M2"
+     },
+     "peer_percentile": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Peer Percentile"
+     }
+    },
+    "type": "object",
+    "required": [
+     "home_id",
+     "score",
+     "band",
+     "raw_score",
+     "components",
+     "confidence",
+     "confidence_reasons",
+     "warnings",
+     "annual_grid_kwh",
+     "annual_grid_kwh_estimated",
+     "intensity_kwh_m2"
+    ],
+    "title": "ScoreResult"
+   },
+   "SignupIn": {
+    "properties": {
+     "username": {
+      "type": "string",
+      "title": "Username"
+     },
+     "password": {
+      "type": "string",
+      "title": "Password"
+     }
+    },
+    "type": "object",
+    "required": [
+     "username",
+     "password"
+    ],
+    "title": "SignupIn"
+   },
+   "SubScore": {
+    "properties": {
+     "component": {
+      "type": "string",
+      "title": "Component"
+     },
+     "weight": {
+      "type": "number",
+      "title": "Weight"
+     },
+     "score": {
+      "type": "number",
+      "title": "Score"
+     },
+     "contribution": {
+      "type": "number",
+      "title": "Contribution"
+     },
+     "why": {
+      "type": "string",
+      "title": "Why"
+     },
+     "estimated": {
+      "type": "boolean",
+      "title": "Estimated",
+      "default": false
+     }
+    },
+    "type": "object",
+    "required": [
+     "component",
+     "weight",
+     "score",
+     "contribution",
+     "why"
+    ],
+    "title": "SubScore"
+   },
+   "TTSIn": {
+    "properties": {
+     "text": {
+      "type": "string",
+      "maxLength": 1500,
+      "title": "Text"
+     },
+     "language": {
+      "type": "string",
+      "title": "Language",
+      "default": "en"
+     }
+    },
+    "type": "object",
+    "required": [
+     "text"
+    ],
+    "title": "TTSIn"
+   },
+   "ValidationError": {
+    "properties": {
+     "loc": {
+      "items": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "integer"
+        }
+       ]
+      },
+      "type": "array",
+      "title": "Location"
+     },
+     "msg": {
+      "type": "string",
+      "title": "Message"
+     },
+     "type": {
+      "type": "string",
+      "title": "Error Type"
+     },
+     "input": {
+      "title": "Input"
+     },
+     "ctx": {
+      "type": "object",
+      "title": "Context"
+     }
+    },
+    "type": "object",
+    "required": [
+     "loc",
+     "msg",
+     "type"
+    ],
+    "title": "ValidationError"
+   }
+  }
+ }
+}

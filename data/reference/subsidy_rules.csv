@@ -1,0 +1,4 @@
+scheme,segment,kw_from,kw_to,inr_per_kw,cap_inr,notes,source
+PM Surya Ghar Muft Bijli Yojana,residential,0,2,30000,60000,Central financial assistance; one subsidy per household,https://pmsuryaghar.gov.in
+PM Surya Ghar Muft Bijli Yojana,residential,2,3,18000,78000,Additional kW up to 3 kW; total cap Rs 78000,https://pmsuryaghar.gov.in
+PM Surya Ghar Muft Bijli Yojana,rwa_ghs_common,0,500,18000,9000000,Group housing societies / RWAs for common facilities incl. EV charging,https://pmsuryaghar.gov.in

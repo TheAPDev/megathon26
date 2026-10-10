@@ -1,0 +1,118 @@
+{
+  "score_by_group": {
+    "zone": {
+      "cold": {
+        "n": 1318,
+        "mean_score": 46.02,
+        "mean_improvement_pct": 41.72
+      },
+      "composite": {
+        "n": 20247,
+        "mean_score": 43.95,
+        "mean_improvement_pct": 44.3
+      },
+      "hot_dry": {
+        "n": 6111,
+        "mean_score": 44.62,
+        "mean_improvement_pct": 45.93
+      },
+      "temperate": {
+        "n": 2604,
+        "mean_score": 45.06,
+        "mean_improvement_pct": 41.94
+      },
+      "warm_humid": {
+        "n": 19720,
+        "mean_score": 44.55,
+        "mean_improvement_pct": 46.62
+      }
+    },
+    "dwelling_type": {
+      "apartment": {
+        "n": 31178,
+        "mean_score": 40.24,
+        "mean_improvement_pct": 38.11
+      },
+      "independent_house": {
+        "n": 14024,
+        "mean_score": 51.37,
+        "mean_improvement_pct": 56.95
+      },
+      "row_house": {
+        "n": 4798,
+        "mean_score": 50.87,
+        "mean_improvement_pct": 57.15
+      }
+    },
+    "tenure": {
+      "owner": {
+        "n": 36034,
+        "mean_score": 44.51,
+        "mean_improvement_pct": 47.84
+      },
+      "tenant": {
+        "n": 13966,
+        "mean_score": 44.05,
+        "mean_improvement_pct": 38.47
+      }
+    },
+    "income_band": {
+      "high": {
+        "n": 6092,
+        "mean_score": 49.49,
+        "mean_improvement_pct": 47.28
+      },
+      "low": {
+        "n": 7328,
+        "mean_score": 39.82,
+        "mean_improvement_pct": 43.77
+      },
+      "middle": {
+        "n": 22570,
+        "mean_score": 43.51,
+        "mean_improvement_pct": 44.56
+      },
+      "upper_middle": {
+        "n": 14010,
+        "mean_score": 45.94,
+        "mean_improvement_pct": 46.16
+      }
+    }
+  },
+  "energy_model_mape_by_group": {
+    "zone": {
+      "cold": 8.76,
+      "composite": 9.29,
+      "hot_dry": 9.54,
+      "temperate": 9.2,
+      "warm_humid": 9.66
+    },
+    "dwelling_type": {
+      "apartment": 9.6,
+      "independent_house": 9.2,
+      "row_house": 9.23
+    },
+    "tenure": {
+      "owner": 9.37,
+      "tenant": 9.66
+    },
+    "income_band": {
+      "high": 9.28,
+      "low": 9.43,
+      "middle": 9.38,
+      "upper_middle": 9.65
+    }
+  },
+  "summary": {
+    "worst_group_mape_pct": [
+      9.66,
+      "zone=warm_humid"
+    ],
+    "best_group_mape_pct": [
+      8.76,
+      "zone=cold"
+    ],
+    "max_gap_pct_points": 0.9,
+    "note": "Scores differ by group by design (real efficiency differences); model error gaps above ~5 points warrant review."
+  }
+}

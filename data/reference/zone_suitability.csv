@@ -1,0 +1,16 @@
+retrofit_id,hot_dry,warm_humid,composite,temperate,cold
+cool_roof,High,High,High,Medium,Low
+roof_insulation,High,Medium,High,Medium,High
+external_shading,High,High,High,Medium,Low
+solar_film,High,High,High,Medium,Low
+ac_setpoint,High,High,High,High,Low
+smart_plug_tod,Medium,Medium,Medium,Medium,Medium
+ac_5star_inverter,High,High,High,Medium,Low
+bldc_fans,High,High,High,High,Medium
+led_lighting,High,High,High,High,High
+fridge_5star,High,High,High,High,High
+solar_water_heater,Medium,Low,High,Medium,High
+heat_pump_geyser,Low,Low,Medium,Medium,High
+induction_cooking,Medium,Medium,Medium,Medium,Medium
+lithium_battery,Medium,Medium,Medium,Medium,Medium
+rooftop_solar,High,High,High,High,Medium

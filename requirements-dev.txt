@@ -1,0 +1,6 @@
+-r requirements.txt
+# local-only extras
+nvidia-riva-client>=2.15  # NVIDIA Magpie TTS via cloud Riva gRPC
+psycopg[binary]>=3.1      # scripts/push_to_supabase.py
+pytest>=8
+hypothesis>=6.100

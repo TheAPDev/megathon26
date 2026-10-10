@@ -1,0 +1,16 @@
+retrofit_id,name,category,order_rank,cost_min_inr,cost_max_inr,cost_basis,effect_type,effect_value,lifetime_years,description
+cool_roof,Cool roof coating,envelope,1,40,80,per_sqft_roof,cooling_reduction,0.15,8,Reflective white coating on exposed RCC roof; cuts heat gain and indoor temperature by 2-3 C
+roof_insulation,Over-deck roof insulation,envelope,1,120,200,per_sqft_roof,cooling_reduction,0.20,25,XPS / PUF insulation over the roof slab for top-floor homes
+external_shading,External shading (chajja / awnings),envelope,1,15000,40000,per_home,cooling_reduction,0.08,15,Shades west and south glazing
+solar_film,Solar-control window film,envelope,1,60,120,per_sqft_glass,cooling_reduction,0.05,10,Spectrally selective film on west-facing glass
+ac_setpoint,AC set-point 24 C + timers,controls,2,0,2000,per_home,cooling_reduction_per_degree,0.06,5,BEE default 24 C; ~6% saving per degree raised
+smart_plug_tod,Smart plugs and time-of-day scheduling,controls,2,2000,5000,per_home,cooling_reduction,0.05,6,Schedules AC/geyser; shifts load to off-peak ToD hours
+ac_5star_inverter,5-star inverter AC,cooling,3,38000,55000,per_ac,iseer_upgrade,5.8,10,Replace fixed-speed or low-star AC with 5-star inverter (ISEER 5.8)
+bldc_fans,BLDC ceiling fans,cooling,3,3000,4500,per_fan,fan_watts,30,15,Replace 75 W induction fans with 30 W BLDC
+led_lighting,LED lighting,appliance,4,100,200,per_point,lighting_watts,9,10,Replace CFL/incandescent with LED
+fridge_5star,5-star refrigerator,appliance,4,25000,40000,per_home,fridge_kwh,180,12,Replace old/low-star fridge
+solar_water_heater,Solar water heater,water,4,20000,35000,per_home,water_heating_reduction,0.70,15,100-200 LPD; strongest in cold and composite zones
+heat_pump_geyser,Heat-pump water heater,water,4,60000,90000,per_home,water_heating_reduction,0.65,12,Alternative where roof space is unavailable
+induction_cooking,LPG to induction cooking,fuel_switch,4,3000,6000,per_home,lpg_to_electric,0.84,10,Removes LPG; raises electricity use
+lithium_battery,Lithium inverter battery,backup,5,35000,60000,per_home,battery_eff,0.92,10,Replaces lead-acid inverter battery; cuts charging losses
+rooftop_solar,Rooftop solar PV,generation,6,55000,65000,per_kw,pv,1,25,Grid-connected net-metered PV sized to load and roof

@@ -1,0 +1,128 @@
+{
+  "seed": 42,
+  "split": "GroupShuffleSplit-equivalent on home_id (=customer), 70/15/15",
+  "energy_model": {
+    "n_train": 18858,
+    "n_val": 4041,
+    "n_test": 4041,
+    "validation": {
+      "baseline_median_zone_type_ac": {
+        "MAE_kwh": 968.3,
+        "MAPE_pct": 26.19,
+        "R2": 0.6015
+      },
+      "physics_only": {
+        "MAE_kwh": 498.7,
+        "MAPE_pct": 11.64,
+        "R2": 0.885
+      },
+      "lightgbm_direct": {
+        "MAE_kwh": 400.7,
+        "MAPE_pct": 10.01,
+        "R2": 0.9317
+      },
+      "hybrid_physics_x_lightgbm": {
+        "MAE_kwh": 397.1,
+        "MAPE_pct": 9.92,
+        "R2": 0.9334
+      }
+    },
+    "test": {
+      "baseline_median_zone_type_ac": {
+        "MAE_kwh": 944.1,
+        "MAPE_pct": 25.97,
+        "R2": 0.6198
+      },
+      "physics_only": {
+        "MAE_kwh": 502.0,
+        "MAPE_pct": 11.71,
+        "R2": 0.8802
+      },
+      "lightgbm_direct": {
+        "MAE_kwh": 389.8,
+        "MAPE_pct": 9.82,
+        "R2": 0.9334
+      },
+      "hybrid_physics_x_lightgbm": {
+        "MAE_kwh": 384.4,
+        "MAPE_pct": 9.72,
+        "R2": 0.9352
+      }
+    },
+    "selected_on_validation": "hybrid_physics_x_lightgbm",
+    "improvement_vs_baseline_test_mae_pct": 59.3,
+    "top_features_mean_abs_shap": {
+      "income_band": 0.0431,
+      "wfh": 0.0123,
+      "city": 0.0121,
+      "physics_cooling_kwh": 0.009,
+      "building_age_years": 0.0053,
+      "sanctioned_load_kw": 0.0047,
+      "physics_kwh": 0.0036,
+      "tenure": 0.0025,
+      "iseer_eff": 0.0023,
+      "n_ac": 0.0018
+    },
+    "version": "a4f2f83d3b17"
+  },
+  "ranker_and_savings": {
+    "validation": {
+      "popularity_baseline": {
+        "NDCG@5": 0.8781,
+        "Precision@3": 0.7306
+      },
+      "rules_physics_roi": {
+        "NDCG@5": 0.9706,
+        "Precision@3": 0.8994
+      },
+      "lightgbm_lambdarank": {
+        "NDCG@5": 0.9836,
+        "Precision@3": 0.9339
+      }
+    },
+    "test": {
+      "popularity_baseline": {
+        "NDCG@5": 0.8809,
+        "Precision@3": 0.72
+      },
+      "rules_physics_roi": {
+        "NDCG@5": 0.9759,
+        "Precision@3": 0.9044
+      },
+      "lightgbm_lambdarank": {
+        "NDCG@5": 0.9857,
+        "Precision@3": 0.9422
+      }
+    },
+    "infeasible_recommendation_rate": 0.0,
+    "n_pairs": 37170,
+    "n_homes": 4000,
+    "version": "7cbf0e02d759",
+    "savings_validation_test": {
+      "electricity_MAE_kwh": {
+        "physics_only": 36.1,
+        "hybrid_metered_scaled": 23.1
+      },
+      "lpg_MAE_kwh": 0.0,
+      "sign_accuracy_electricity": 1.0,
+      "induction_electricity_increase_detected": true
+    }
+  },
+  "value_model": {
+    "test_MAPE_pct": {
+      "baseline_city_type_median_psf": 11.45,
+      "baseline_flat_rating_rule": 29.61,
+      "hedonic_lightgbm": 6.72
+    },
+    "conformal_alpha": 0.2,
+    "conformal_q_log": 0.1082,
+    "interval_coverage_test": 0.8156,
+    "interval_width_pct": 24.2,
+    "implied_premium_per_10_points_pct": 1.63,
+    "generator_assumed_premium_per_10_points_pct": 1.5,
+    "note": "Recovering the assumed premium shows internal consistency, not real-world accuracy.",
+    "bootstrap_models": 10,
+    "version": "b459b7540126",
+    "n_sales": 12470
+  }
+}

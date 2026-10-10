@@ -1,0 +1,6 @@
+product,lender_type,max_amount_inr,rate_pct,tenure_years,min_kw,max_kw,collateral,notes
+Rooftop solar loan (<=3 kW),PSU bank,200000,5.75,10,0,3,Hypothecation of panels,Indicative rate under PM Surya Ghar concessional scheme; verify current
+Rooftop solar loan (3-10 kW),PSU bank,600000,8.15,10,3,10,Hypothecation,Indicative; verify
+Home-loan top-up (efficiency package),Bank / HFC,1000000,8.75,15,0,0,Existing mortgage,Indicative top-up rate
+Green home loan concession,Bank / HFC,0,-0.10,0,0,0,Certified green home,5-25 bps concession for IGBC/GRIHA certified homes; PNB Harit Niwas 0.10%
+Consumer durable EMI (AC / appliances),NBFC,150000,14.0,2,0,0,None,No-cost EMI offers common; indicative

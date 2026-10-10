@@ -1,0 +1,21 @@
+{
+ "source": "data/generated/homes.parquet",
+ "source_sha256": "a323be49ab83ed36",
+ "split": "train homes only (70%); val/test homes excluded",
+ "examples_train": 1352,
+ "examples_val": 148,
+ "homes": 1488,
+ "grounded_rate": 1.0,
+ "stats": {
+  "ordinary": 900,
+  "lang_hi": 76,
+  "src_template": 1500,
+  "missing_data": 225,
+  "lang_en": 1424,
+  "infeasible": 225,
+  "conflict": 150
+ },
+ "seed": 21,
+ "distilled": false,
+ "fewshot_examples": 3
+}

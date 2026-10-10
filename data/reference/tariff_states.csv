@@ -1,0 +1,25 @@
+state,discom,fixed_charge_inr_month,fuel_surcharge_inr_kwh,electricity_duty_pct,free_units_if_at_or_below,subsidy_note,net_metering,export_rate_inr_kwh,state_solar_topup_inr_per_kw,state_solar_topup_cap_inr,tod_tariff
+Delhi,BSES / TPDDL,40,0.0,5,200,Bill waived if monthly use <=200 units; 50% up to Rs 800 for 201-400 units,net,3.0,2000,10000,yes
+Haryana,UHBVN / DHBVN,70,0.0,4,0,,net,2.9,0,0,no
+Uttar Pradesh,UPPCL,110,0.0,5,0,,net,2.8,15000,30000,no
+Maharashtra,MSEDCL,128,0.6,16,0,,net,3.3,0,0,yes
+Karnataka,BESCOM,120,0.3,9,200,Gruha Jyothi: free up to ~200 units based on past average,net,3.9,0,0,no
+Tamil Nadu,TNPDCL,30,0.0,0,50,First 100 units per bi-month (50/month) free,net,2.9,0,0,no
+Telangana,TGSPDCL,50,0.0,6,200,Gruha Jyothi: free up to 200 units for eligible households,net,3.0,0,0,no
+Andhra Pradesh,APSPDCL,60,0.4,6,0,,net,2.9,0,0,no
+West Bengal,WBSEDCL / CESC,50,0.3,10,0,,net,3.0,0,0,no
+Gujarat,UGVCL / PGVCL / MGVCL / DGVCL,55,2.85,15,0,,net,2.25,0,0,no
+Rajasthan,JVVNL / AVVNL / JdVVNL,70,0.0,5,100,Mukhyamantri free electricity: first 100 units free for registered households,net,3.2,0,0,no
+Chandigarh,CPDL,40,0.0,5,0,,net,3.0,0,0,no
+Punjab,PSPCL,65,0.0,13,300,Free up to 300 units/month for domestic consumers,net,2.8,0,0,no
+Madhya Pradesh,MPPKVVCL / MPMKVVCL / MPPoKVVCL,70,0.0,9,0,Indira Griha Jyoti: Rs 100 bill for <=100 units (registered),net,3.0,0,0,no
+Chhattisgarh,CSPDCL,40,0.0,8,0,,net,3.0,0,0,no
+Bihar,NBPDCL / SBPDCL,45,0.0,6,125,125 units free per month (2025 scheme),net,3.0,0,0,no
+Jharkhand,JBVNL,50,0.0,5,200,200 units free per month (2024 scheme),net,3.0,0,0,no
+Odisha,TPCODL / TPSODL / TPWODL / TPNODL,50,0.0,5,0,,net,3.0,0,0,no
+Assam,APDCL,55,0.0,5,0,,net,3.0,15000,45000,no
+Kerala,KSEB,60,0.2,10,0,,net,3.2,0,0,yes
+Goa,Goa Electricity Dept,30,0.0,0,0,,net,3.0,0,0,no
+Uttarakhand,UPCL,45,0.0,5,0,,net,3.0,0,0,no
+Himachal Pradesh,HPSEBL,30,0.0,0,125,125 units free per month,net,3.0,0,0,no
+Jammu and Kashmir,JPDCL / KPDCL,35,0.0,0,0,,net,3.0,0,0,no

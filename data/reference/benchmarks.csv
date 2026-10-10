@@ -1,0 +1,6 @@
+zone,median_kwh_m2,n_homes,method
+cold,37.9,763,"median (grid+LPG)/m2, complete-data homes, house values deflated by 1.1"
+composite,54.2,3000,"median (grid+LPG)/m2, complete-data homes, house values deflated by 1.1"
+hot_dry,55.8,3000,"median (grid+LPG)/m2, complete-data homes, house values deflated by 1.1"
+temperate,41.5,1551,"median (grid+LPG)/m2, complete-data homes, house values deflated by 1.1"
+warm_humid,52.1,3000,"median (grid+LPG)/m2, complete-data homes, house values deflated by 1.1"

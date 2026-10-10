@@ -1,0 +1,5 @@
+fuel,unit,kg_co2_per_unit,version,source
+grid_electricity,kWh,0.727,CEA CO2 Baseline Database v20 (weighted avg),https://cea.nic.in/cdm-co2-baseline-database/
+lpg,kWh,0.227,IPCC 2006 default 63.1 t CO2/TJ,https://www.ipcc-nggip.iges.or.jp/public/2006gl/
+png,kWh,0.202,IPCC 2006 default 56.1 t CO2/TJ,https://www.ipcc-nggip.iges.or.jp/public/2006gl/
+diesel_dg_set,kWh_electric,0.89,2.68 kg CO2/L diesel / ~3.0 kWh per L small DG set,IPCC 2006 + typical DG specific fuel consumption

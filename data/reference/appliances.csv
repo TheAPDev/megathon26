@@ -1,0 +1,22 @@
+appliance,variant,metric,value,unit,source
+ac,fixed_1star,iseer,2.9,Wh/Wh,BEE star label tables (older fixed-speed)
+ac,fixed_3star,iseer,3.3,Wh/Wh,BEE star label tables (older fixed-speed)
+ac,fixed_5star,iseer,3.6,Wh/Wh,BEE star label tables (older fixed-speed)
+ac,inverter_1star,iseer,3.6,Wh/Wh,BEE 2025 inverter AC table
+ac,inverter_3star,iseer,4.5,Wh/Wh,BEE 2025 inverter AC table
+ac,inverter_5star,iseer,5.8,Wh/Wh,BEE 2025 inverter AC table
+ac,degradation_per_year,pct,1.0,%/yr,Field studies (assumption)
+fridge,1star,annual_kwh,400,kWh/yr,BEE frost-free ~250 L
+fridge,2star,annual_kwh,330,kWh/yr,BEE frost-free ~250 L
+fridge,3star,annual_kwh,270,kWh/yr,BEE frost-free ~250 L
+fridge,4star,annual_kwh,220,kWh/yr,BEE frost-free ~250 L
+fridge,5star,annual_kwh,180,kWh/yr,BEE frost-free ~250 L
+fan,induction,watts,75,W,Typical ceiling fan
+fan,bldc,watts,30,W,BEE 5-star BLDC ceiling fan
+lighting,cfl_incandescent_mix,watts_per_point,25,W,Assumption
+lighting,led,watts_per_point,9,W,Assumption
+geyser,electric_storage,annual_kwh_per_person,180,kWh/yr,Assumption (north India winter use)
+battery,lead_acid,round_trip_eff,0.70,ratio,Typical home inverter
+battery,lithium,round_trip_eff,0.92,ratio,Typical LFP
+cooking,lpg_stove,efficiency,0.40,ratio,BEE / literature
+cooking,induction,efficiency,0.84,ratio,BEE / literature
