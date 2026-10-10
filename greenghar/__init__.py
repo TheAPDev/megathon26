@@ -18,6 +18,8 @@ def _load_dotenv(path: Path) -> None:
         key, val = key.strip().removeprefix("export ").strip(), val.strip()
         if val[:1] in "\"'" and val[-1:] == val[:1] and len(val) >= 2:
             val = val[1:-1]
+        elif val.startswith("#"):
+            val = ""  # "KEY=   # where to get it": empty value with a trailing note
         elif " #" in val:
             val = val.split(" #", 1)[0].rstrip()
         os.environ.setdefault(key, val)

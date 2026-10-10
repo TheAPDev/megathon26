@@ -140,3 +140,17 @@ def test_service_headers_for_legacy_and_new_secret_keys():
     from greenghar.db.supabase_repo import service_headers
     assert service_headers("eyJhbGciOi.x.y") == {"apikey": "eyJhbGciOi.x.y", "Authorization": "Bearer eyJhbGciOi.x.y"}
     assert service_headers("sb_secret_abc") == {"apikey": "sb_secret_abc"}  # opaque keys are never sent as Bearer
+
+
+def test_env_template_comments_do_not_become_values(tmp_path, monkeypatch):
+    import os
+
+    from greenghar import _load_dotenv
+    f = tmp_path / "x.env"
+    f.write_text("GGT_A=            # paste key here\nGGT_B=abc   # note\nGGT_C=\"q # r\"\nGGT_D=plain\n")
+    for k in "ABCD":
+        monkeypatch.delenv(f"GGT_{k}", raising=False)
+    _load_dotenv(f)
+    assert [os.environ[f"GGT_{k}"] for k in "ABCD"] == ["", "abc", "q # r", "plain"]
+    for k in "ABCD":
+        os.environ.pop(f"GGT_{k}", None)

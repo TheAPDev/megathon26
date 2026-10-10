@@ -28,6 +28,7 @@ def read_env() -> dict[str, str]:
             for line in p.read_text(encoding="utf-8").splitlines():
                 if "=" in line and not line.lstrip().startswith("#"):
                     k, v = line.split("=", 1)
+                    v = "" if v.strip().startswith("#") else v.split(" #", 1)[0]
                     if v.strip():
                         out.setdefault(k.strip(), v.strip())
     return out
